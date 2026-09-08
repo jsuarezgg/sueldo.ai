@@ -1,0 +1,8 @@
+node_modules
+dist
+audit
+design
+design-qa*.png
+design-qa.md
+AGENTS.md
+

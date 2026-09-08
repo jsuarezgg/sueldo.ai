@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Metodología y fuentes de la calculadora | sueldo.ai</title>
+    <meta name="description" content="Cómo estima sueldo.ai ISR, IMSS, RESICO, prestaciones, Banxico FIX y RSUs al comparar cualquier par de ofertas en México." />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1" />
+    <link rel="canonical" href="https://sueldo.ai/metodologia" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="stylesheet" href="/content.css" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:site_name" content="sueldo.ai" />
+    <meta property="og:title" content="Metodología y fuentes de sueldo.ai" />
+    <meta property="og:description" content="Qué calcula la herramienta, de dónde salen las reglas y qué límites conserva." />
+    <meta property="og:url" content="https://sueldo.ai/metodologia" />
+    <meta property="og:image" content="https://sueldo.ai/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body class="content-body">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <header class="content-header">
+      <div class="content-shell content-header-inner">
+        <a class="content-wordmark" href="/" aria-label="sueldo.ai, inicio">sueldo<span>.ai</span></a>
+        <nav aria-label="Navegación principal">
+          <a href="/">Calculadora</a>
+          <a href="/como-usar">Cómo usar</a>
+          <a href="/uso.md">Markdown</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="content-main" id="contenido">
+      <article class="content-article">
+        <header class="article-header">
+          <h1>Cómo calcula sueldo.ai</h1>
+          <p class="lede">
+            La metodología separa efectivo, valor económico y compensación contingente. Cada resultado depende
+            de reglas versionadas y de supuestos que la persona puede revisar y editar.
+          </p>
+          <p class="article-meta">Reglas fiscales modeladas para 2026 · Actualizado el 30 de agosto de 2026</p>
+        </header>
+
+        <section class="article-section">
+          <h2>Principio de comparación</h2>
+          <p>
+            sueldo.ai convierte cada oferta en un registro de componentes. El pago base, los impuestos, los costos,
+            los reembolsos, las prestaciones, la protección y las RSUs conservan su identidad. La herramienta no
+            presenta todo como si fuera sueldo disponible.
+          </p>
+          <p>
+            Cada oferta se calcula según la relación que la persona elige. Por eso la misma comparación admite
+            nómina contra nómina, contractor contra contractor o una combinación, sin asignar un tipo fijo a
+            Oferta A u Oferta B.
+          </p>
+          <dl class="definition-list">
+            <div>
+              <dt>Efectivo disponible</dt>
+              <dd>Ingreso cobrado menos impuestos y costos recurrentes que el modelo puede estimar.</dd>
+            </div>
+            <div>
+              <dt>Valor económico</dt>
+              <dd>Incluye conceptos con valor, aunque no lleguen como depósito mensual o no puedan gastarse hoy.</dd>
+            </div>
+            <div>
+              <dt>Valor contingente</dt>
+              <dd>Permanece condicionado a vesting, desempeño, permanencia, mercado u otras reglas.</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="article-section">
+          <h2>Oferta de nómina</h2>
+          <h3>ISR</h3>
+          <p>
+            La estimación aplica la tarifa mensual del Anexo 8 de la Resolución Miscelánea Fiscal 2026. Para
+            prestaciones y compensación adicional, el modelo considera las exenciones que implementa y calcula
+            el impuesto incremental con la tarifa anual. El resultado no sustituye una corrida oficial de nómina.
+          </p>
+          <h3>IMSS</h3>
+          <p>
+            La cuota obrera estimada parte del salario base de cotización, integra los conceptos fijos modelados y
+            respeta los topes expresados en UMA. El cálculo usa un mes de nómina de 30 días y reglas explícitas de
+            la Ley del Seguro Social.
+          </p>
+          <h3>Prestaciones y aportaciones patronales</h3>
+          <p>
+            Aguinaldo, prima vacacional, vacaciones y PTU se desglosan según los datos capturados y las exenciones
+            aplicables que modela la herramienta. Las aportaciones patronales a retiro, cesantía y vejez, e Infonavit
+            cuentan como valor económico: no se suman al efectivo mensual disponible.
+          </p>
+        </section>
+
+        <section class="article-section">
+          <h2>Oferta de contractor</h2>
+          <p>
+            Para una persona física que confirma su elegibilidad, RESICO se estima sobre ingreso cobrado con la
+            tasa aplicable, de 1% a 2.5%, según el nivel de ingreso. El modelo no usa 2.5% como sustituto cuando el régimen no
+            aplica: bloquea el resultado si el perfil no está confirmado o el ingreso anualizado rebasa MXN 3.5 millones.
+          </p>
+          <p>
+            Contabilidad, seguro médico, comisiones de cobro, conversión de divisas, vacaciones no facturadas y
+            otros costos propios son supuestos editables. El modelo no determina por sí solo el tratamiento de IVA,
+            retenciones, tratados, deducciones, estructuras societarias o circunstancias fiscales particulares.
+          </p>
+        </section>
+
+        <section class="article-section">
+          <h2>Moneda, horizonte y RSUs</h2>
+          <h3>Conversión USD/MXN</h3>
+          <p>
+            La aplicación consulta el tipo de cambio FIX más reciente publicado por Banco de México y muestra su
+            fecha. Si la consulta no está disponible, conserva un valor manual visible para que la persona lo confirme.
+          </p>
+          <h3>Doce meses y tres años</h3>
+          <p>
+            La vista anual permite comparar el primer ciclo de efectivo y prestaciones. La vista de tres años muestra
+            diferencias acumuladas y evita tratar un bono o grant aislado como si se repitiera cada mes.
+          </p>
+          <h3>RSUs</h3>
+          <p>
+            El calendario usa el valor del grant, moneda, duración, cliff, cadencia y porcentaje por año capturados.
+            Los eventos de vesting se muestran por fecha relativa. El impuesto y el costo de venta son estimaciones;
+            el valor real depende del precio de la acción, la fecha, la liquidez y el tratamiento fiscal aplicable.
+          </p>
+        </section>
+
+        <section class="article-section">
+          <h2>Fuentes oficiales principales</h2>
+          <ul class="source-list">
+            <li><a href="https://www.sat.gob.mx/minisitio/NormatividadRMFyRGCE/documentos2026/rmf/anexos/Anexo-8-RMF-2026_DOF-28122025.pdf">SAT · Anexo 8 de la RMF 2026, tarifa ISR</a></li>
+            <li><a href="https://www.dof.gob.mx/nota_detalle.php?codigo=5725287&amp;fecha=01/05/2024">DOF · Decreto de subsidio para el empleo</a> y <a href="https://www.dof.gob.mx/nota_detalle.php?codigo=5777649&amp;fecha=31/12/2025">actualización para 2026</a></li>
+            <li><a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LISR.pdf">Cámara de Diputados · Ley del Impuesto sobre la Renta</a></li>
+            <li><a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LFT.pdf">Cámara de Diputados · Ley Federal del Trabajo</a></li>
+            <li><a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LSS.pdf">Cámara de Diputados · Ley del Seguro Social</a></li>
+            <li><a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LIFNVT.pdf">Cámara de Diputados · Ley del Infonavit</a></li>
+            <li><a href="https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2026/uma/uma2026.pdf">INEGI · UMA 2026</a></li>
+            <li><a href="https://www.banxico.org.mx/tipcamb/tipCamMIAction.do?idioma=sp">Banco de México · tipo de cambio FIX</a></li>
+          </ul>
+          <p>
+            Las fuentes pueden cambiar. La interfaz muestra el año fiscal y la fecha del tipo de cambio para que
+            una estimación no parezca vigente fuera de contexto.
+          </p>
+        </section>
+
+        <section class="article-section">
+          <h2>Límites</h2>
+          <p>
+            El cálculo es informativo y editable. No conoce la totalidad de los ingresos, deducciones, créditos,
+            obligaciones, contratos o circunstancias personales de quien lo usa. No es asesoría fiscal, contable,
+            legal ni de inversión, y no recomienda una oferta.
+          </p>
+          <a class="article-action" href="/">Comparar dos ofertas</a>
+        </section>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="content-shell site-footer-inner">
+        <span>sueldo.ai · Reglas y supuestos visibles</span>
+        <nav aria-label="Enlaces legales"><a href="/privacidad">Privacidad</a><a href="/terminos">Términos</a></nav>
+      </div>
+    </footer>
+  </body>
+</html>

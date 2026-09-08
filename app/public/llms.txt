@@ -1,0 +1,26 @@
+# sueldo.ai
+
+> Calculadora gratuita y sin registro para comparar cualquier par de ofertas de trabajo en México. Separa efectivo disponible, impuestos, costos, prestaciones, protección y compensación contingente.
+
+Idioma principal: español de México.
+
+## Referencia principal
+
+- [Guía completa en Markdown](https://sueldo.ai/uso.md): uso, interpretación, alcance, límites, privacidad y fuentes.
+- [Calculadora](https://sueldo.ai/): flujo interactivo de comparación.
+- [Metodología y fuentes](https://sueldo.ai/metodologia): reglas y supuestos que usa el cálculo.
+- [Cómo comparar nómina y contractor](https://sueldo.ai/comparar-nomina-contractor-mexico): marco de decisión y conceptos que no deben mezclarse.
+
+## Información del sitio
+
+- [Acerca de sueldo.ai](https://sueldo.ai/acerca)
+- [Privacidad](https://sueldo.ai/privacidad)
+- [Términos de uso](https://sueldo.ai/terminos)
+
+## Límites importantes
+
+- Es una estimación informativa; no es asesoría fiscal, contable, legal ni de inversión.
+- Los resultados dependen de los datos y supuestos que introduce la persona usuaria.
+- RESICO se bloquea cuando el ingreso anualizado rebasa MXN 3.5 millones o no se confirma la elegibilidad.
+- Las prestaciones y aportaciones patronales se muestran como valor económico, no como efectivo mensual disponible.
+- Las RSUs y otros montos contingentes se mantienen separados del sueldo.

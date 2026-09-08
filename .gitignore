@@ -1,0 +1,17 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+
+node_modules/
+dist/
+.vite/
+.vercel/
+
+prototype/
+app/audit/
+app/design/
+app/design-qa*.png
+app/design-qa.md
+app/.playwright-cli/
+app/output/

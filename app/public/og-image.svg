@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f7f7f5" />
+  <rect x="62" y="62" width="1076" height="506" fill="#ffffff" stroke="#d8d8d4" stroke-width="2" />
+  <text x="116" y="158" fill="#161616" font-family="Archivo, Helvetica, Arial, sans-serif" font-size="46" font-weight="700" letter-spacing="-1">sueldo<tspan fill="#9b1b4a" font-size="35">.ai</tspan></text>
+  <line x1="116" y1="202" x2="1084" y2="202" stroke="#d8d8d4" stroke-width="2" />
+  <text x="116" y="318" fill="#161616" font-family="Archivo, Helvetica, Arial, sans-serif" font-size="65" font-weight="700" letter-spacing="-2">¿Cuál oferta vale más?</text>
+  <text x="116" y="394" fill="#161616" font-family="Archivo, Helvetica, Arial, sans-serif" font-size="65" font-weight="700" letter-spacing="-2">Compáralas de verdad</text>
+  <text x="116" y="486" fill="#5a5a5a" font-family="Archivo, Helvetica, Arial, sans-serif" font-size="28">Sueldo, bonos, prestaciones, equity, impuestos y tiempo · México</text>
+  <rect x="116" y="526" width="194" height="6" fill="#9b1b4a" />
+</svg>

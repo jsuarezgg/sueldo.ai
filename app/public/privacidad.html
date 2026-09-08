@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Privacidad | sueldo.ai</title>
+    <meta name="description" content="Cómo trata sueldo.ai los datos capturados en la calculadora y qué solicitudes de red realiza." />
+    <meta name="robots" content="index,follow,max-snippet:-1" />
+    <link rel="canonical" href="https://sueldo.ai/privacidad" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="stylesheet" href="/content.css" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:site_name" content="sueldo.ai" />
+    <meta property="og:title" content="Privacidad en sueldo.ai" />
+    <meta property="og:description" content="Los datos de las ofertas se calculan en el navegador y no se guardan en una cuenta o base de datos." />
+    <meta property="og:url" content="https://sueldo.ai/privacidad" />
+    <meta property="og:image" content="https://sueldo.ai/og-image.png" />
+  </head>
+  <body class="content-body">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <header class="content-header">
+      <div class="content-shell content-header-inner">
+        <a class="content-wordmark" href="/" aria-label="sueldo.ai, inicio">sueldo<span>.ai</span></a>
+        <nav aria-label="Navegación principal"><a href="/">Calculadora</a><a href="/acerca">Acerca</a><a href="/terminos">Términos</a></nav>
+      </div>
+    </header>
+
+    <main class="content-main" id="contenido">
+      <article class="content-article">
+        <header class="article-header">
+          <h1>Privacidad</h1>
+          <p class="lede">
+            La versión actual de sueldo.ai procesa los datos de las ofertas en el navegador. No crea cuentas ni
+            guarda una comparación en una base de datos.
+          </p>
+          <p class="article-meta">Última actualización: 30 de agosto de 2026</p>
+        </header>
+
+        <section class="article-section">
+          <h2>Datos que capturas</h2>
+          <p>
+            Pagos, nombres de referencia, prestaciones, costos, supuestos y RSUs viven en la memoria de la pestaña
+            durante la captura. No se envían al servidor de sueldo.ai. Al compartir, esos datos se codifican en el
+            fragmento del enlace para que la persona que lo abra pueda restaurar la comparación.
+          </p>
+          <p>
+            Evita introducir información que no necesitas para comparar. Puedes usar etiquetas genéricas como
+            “Oferta A” y “Oferta B”; el nombre de una empresa o cliente no modifica el cálculo.
+          </p>
+        </section>
+
+        <section class="article-section">
+          <h2>Solicitudes de red</h2>
+          <p>
+            El navegador solicita a <code>/api/fx</code> el tipo de cambio Banxico FIX. Esa petición no contiene
+            los datos de las ofertas. El servidor consulta la publicación de Banco de México y devuelve tasa, fecha,
+            fuente y serie.
+          </p>
+          <p>
+            El fragmento que comienza con <code>#c=</code> se procesa en el navegador y no forma parte de la
+            solicitud HTTP. Aun así, permanece visible en el enlace, el portapapeles y posiblemente el historial
+            del navegador.
+          </p>
+          <p>
+            Como en cualquier sitio web, la infraestructura de alojamiento puede procesar datos técnicos ordinarios
+            de una solicitud —por ejemplo, dirección IP, agente de usuario, ruta y hora— para entregar y proteger el
+            servicio, de acuerdo con las políticas del proveedor de infraestructura.
+          </p>
+        </section>
+
+        <section class="article-section">
+          <h2>Enlaces y tarjetas para compartir</h2>
+          <p>
+            El enlace para compartir contiene ambas ofertas, sus números, supuestos, tipo de cambio y horizonte.
+            Cualquier persona con el enlace puede ver la comparación; la codificación no equivale a cifrado.
+            sueldo.ai no guarda el contenido del enlace en una cuenta o base de datos.
+          </p>
+          <p>
+            La imagen se genera en tu navegador. De forma predeterminada usa “Oferta A” y “Oferta B” y muestra
+            diferencias relativas, no nombres ni montos. Si activas la opción de incluir detalles, esos nombres y
+            montos se incorporan al PNG que tú decides compartir. Descargarlo no envía la comparación al servidor.
+          </p>
+        </section>
+
+        <section class="article-section">
+          <h2>Cookies y analítica</h2>
+          <p>
+            La versión publicada no instala cookies de analítica y no integra una herramienta de seguimiento de uso.
+            Los enlaces a fuentes oficiales y al repositorio llevan a sitios externos con sus propias políticas.
+          </p>
+        </section>
+
+        <section class="article-section">
+          <h2>Cambios y preguntas</h2>
+          <p>
+            Si la aplicación incorpora persistencia, cuentas o analítica, esta página deberá actualizarse antes de
+            que esos mecanismos se activen. Puedes revisar o reportar una discrepancia en el
+            <a href="https://github.com/jsuarezgg/sueldo.ai">repositorio del proyecto</a>.
+          </p>
+        </section>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="content-shell site-footer-inner">
+        <span>sueldo.ai · Comparaciones locales a la sesión</span>
+        <nav aria-label="Enlaces legales"><a href="/acerca">Acerca</a><a href="/terminos">Términos</a></nav>
+      </div>
+    </footer>
+  </body>
+</html>
