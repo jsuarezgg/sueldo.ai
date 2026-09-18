@@ -67,6 +67,14 @@ npm run test:build
 
 For an authorized production release, match the ready deployment to the merged commit, then exercise the affected flow at `https://sueldo.ai` with synthetic offer values. Verify `/api/fx` for FX changes and raw HTTP status codes for route changes. Record the exact commit and observed behavior; a build or merge alone is not live verification.
 
+## Web Analytics
+
+The calculator and the six information pages load `app/public/analytics.js`, using Vercel's [plain HTML integration](https://vercel.com/docs/analytics/quickstart) and [beforeSend hook](https://vercel.com/docs/analytics/package#beforesend). The script loads only on `https://sueldo.ai` and `https://www.sueldo.ai`, so local development and preview deployments do not report page views or request Vercel's analytics endpoint. Query strings and URL fragments are removed before sending page URLs, and custom events are discarded. No offer inputs are collected.
+
+These pages also use a `strict-origin` referrer policy so outgoing request headers do not include the page's path or query string. This preserves referring domains while intentionally omitting internal referral paths.
+
+At release, enable Web Analytics for the `sueldo-ai` project in the [Vercel dashboard](https://vercel.com/jsuarezggs-projects/sueldo-ai/analytics) **before deploying**. Vercel adds `/_vercel/insights/*` routes on the next deployment. After deployment, use a synthetic comparison to confirm that `/_vercel/insights/script.js` loads and the page-view request contains no query string or `#c=` fragment, then confirm that visits appear in the dashboard. A PR or successful build alone does not activate analytics.
+
 ## Search discovery
 
 The production build publishes first-class crawler and reference surfaces:
