@@ -51,10 +51,31 @@ test("every public information page has a unique canonical URL and an indexable 
   }
 });
 
+test("sitemap dates reflect each page's last material change", async () => {
+  const sitemap = await read("public/sitemap.xml");
+  const entries = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map(([, entry]) => [
+    entry.match(/<loc>([^<]+)<\/loc>/)?.[1],
+    entry.match(/<lastmod>([^<]+)<\/lastmod>/)?.[1],
+  ]);
+
+  // The calculator changed on September 7. The September 8 public release
+  // added repository licensing without changing page content. Keep unchanged
+  // pages' dates when releasing sitemap or other infrastructure updates.
+  assert.deepEqual(entries, [
+    ["https://sueldo.ai/", "2026-09-07"],
+    ["https://sueldo.ai/como-usar", "2026-08-30"],
+    ["https://sueldo.ai/metodologia", "2026-08-30"],
+    ["https://sueldo.ai/comparar-nomina-contractor-mexico", "2026-08-30"],
+    ["https://sueldo.ai/acerca", "2026-08-30"],
+    ["https://sueldo.ai/privacidad", "2026-08-30"],
+    ["https://sueldo.ai/terminos", "2026-08-30"],
+    ["https://sueldo.ai/uso.md", "2026-08-30"],
+  ]);
+});
+
 test("crawler controls and discovery documents agree on the canonical site", async () => {
-  const [robots, sitemap, llms, usage] = await Promise.all([
+  const [robots, llms, usage] = await Promise.all([
     read("public/robots.txt"),
-    read("public/sitemap.xml"),
     read("public/llms.txt"),
     read("public/uso.md"),
   ]);
@@ -65,19 +86,6 @@ test("crawler controls and discovery documents agree on the canonical site", asy
   assert.match(robots, /^User-agent: Claude-SearchBot$/m);
   assert.match(robots, /^Disallow: \/api\/$/m);
   assert.match(robots, /^Sitemap: https:\/\/sueldo\.ai\/sitemap\.xml$/m);
-
-  for (const url of [
-    "https://sueldo.ai/",
-    "https://sueldo.ai/como-usar",
-    "https://sueldo.ai/metodologia",
-    "https://sueldo.ai/comparar-nomina-contractor-mexico",
-    "https://sueldo.ai/acerca",
-    "https://sueldo.ai/privacidad",
-    "https://sueldo.ai/terminos",
-    "https://sueldo.ai/uso.md",
-  ]) {
-    assert.ok(sitemap.includes(`<loc>${url}</loc>`), url);
-  }
 
   assert.match(llms, /^# sueldo\.ai$/m);
   assert.match(llms, /https:\/\/sueldo\.ai\/uso\.md/);
