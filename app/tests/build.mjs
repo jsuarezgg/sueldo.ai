@@ -9,6 +9,17 @@ test("publishes the source sitemap unchanged", async () => {
   );
 });
 
+test("publishes analytics and includes it in each tracked HTML page", async () => {
+  assert.equal(
+    await readFile(new URL("../dist/client/analytics.js", import.meta.url), "utf8"),
+    await readFile(new URL("../public/analytics.js", import.meta.url), "utf8"),
+  );
+  for (const page of ["index", "acerca", "como-usar", "comparar-nomina-contractor-mexico", "metodologia", "privacidad", "terminos"]) {
+    const html = await readFile(new URL(`../dist/client/${page}.html`, import.meta.url), "utf8");
+    assert.match(html, /<script defer src="\/analytics\.js"><\/script>/, page);
+  }
+});
+
 test("emits loadable Sites output and the current server implementation", async () => {
   await access(new URL("../dist/client/index.html", import.meta.url));
   const hosting = JSON.parse(await readFile(new URL("../dist/.openai/hosting.json", import.meta.url)));
