@@ -2,6 +2,13 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
+test("publishes the source sitemap unchanged", async () => {
+  assert.equal(
+    await readFile(new URL("../dist/client/sitemap.xml", import.meta.url), "utf8"),
+    await readFile(new URL("../public/sitemap.xml", import.meta.url), "utf8"),
+  );
+});
+
 test("emits loadable Sites output and the current server implementation", async () => {
   await access(new URL("../dist/client/index.html", import.meta.url));
   const hosting = JSON.parse(await readFile(new URL("../dist/.openai/hosting.json", import.meta.url)));
