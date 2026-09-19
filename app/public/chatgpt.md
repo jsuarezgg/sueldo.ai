@@ -1,6 +1,8 @@
 # Comparar ofertas con sueldo.ai desde ChatGPT
 
-- Guía: https://sueldo.ai/chatgpt.md
+- Guía HTML para lectores web: https://sueldo.ai/chatgpt
+- Guía Markdown: https://sueldo.ai/chatgpt.md
+- Cálculo como página HTML: https://sueldo.ai/compare
 - Endpoint público: https://sueldo.ai/api/compare
 - Contrato: `v=1`. Metodología: `2026.1`. Año fiscal base: 2026.
 - Actualización: 18 de septiembre de 2026.
@@ -9,23 +11,23 @@ No necesitas instalar una app, conectar una cuenta ni configurar un plugin. El a
 
 ## Texto para copiar después de adjuntar dos ofertas
 
-> Compara estos dos PDFs usando sueldo.ai. Primero lee https://sueldo.ai/chatgpt.md. Extrae únicamente los números y opciones necesarios; no envíes nombres, correos, RFC ni texto de los documentos. Entiendo que los parámetros enviados en una URL pueden quedar en historiales y registros. Confirma conmigo la elegibilidad de RESICO si aplica y pregunta por información esencial que falte. Consulta el endpoint público y explica sus resultados, supuestos y advertencias sin sustituir sus cálculos. Incluye el enlace interactivo devuelto. Si no puedes recuperar la URL, dilo y dame el enlace para abrirlo.
+> Compara estos dos PDFs usando sueldo.ai. Primero lee https://sueldo.ai/chatgpt. Extrae únicamente los números y opciones necesarios; no envíes nombres, correos, RFC ni texto de los documentos. Entiendo que los parámetros enviados en una URL pueden quedar en historiales y registros. Confirma conmigo la elegibilidad de RESICO si aplica y pregunta por información esencial que falte. Consulta el endpoint público y explica sus resultados, supuestos y advertencias sin sustituir sus cálculos. Incluye el enlace interactivo devuelto. Si no puedes recuperar la URL, dilo y dame el enlace para abrirlo.
 
 ## Flujo para el asistente
 
 1. Lee los documentos y distingue salario bruto de neto, periodicidad, moneda, relación contractual y beneficios. No adivines importes ni conviertas un salario neto a bruto.
 2. Usa `a` y `b` como etiquetas. Un monto anual de salario base explícito puede dividirse entre 12; no dividas un paquete total que incluya bonos o equity como si fuera salario base.
 3. Construye una URL GET con los campos documentados. No subas documentos ni texto, nombres de empresa o identificadores personales. Codifica los valores con las reglas estándar de query string, sin doble codificación.
-4. Recupera la URL. JSON es el formato predeterminado; añade `format=html` si el lector web necesita una página HTML. Ambos ejecutan el mismo cálculo.
+4. Recupera la URL. Usa `/compare` para una página HTML, con los mismos parámetros; `/api/compare` devuelve JSON por omisión y también admite `format=html`. Ambos ejecutan el mismo cálculo.
 5. Lee `status` antes de explicar cifras. Para `needs_input`, pregunta solo por los campos faltantes. Para `invalid_input`, explica los errores y corrige los parámetros; no presentes una comparación válida. Para `unavailable`, no inventes resultados ni un tipo de cambio.
 6. Con `ok`, cita la metodología, el horizonte y el tipo de cambio devueltos. Separa efectivo, beneficios restringidos, protección y equity. Explica los supuestos importantes y devuelve `view_url`.
 
 ## Ejemplo sintético
 
-[Calcular dos ofertas de ejemplo](https://sueldo.ai/api/compare?v=1&methodology=2026.1&a.type=payroll&a.monthly_pay=120000&a.currency=MXN&a.aguinaldo_days=30&a.vacation_days=20&a.vacation_premium_rate=50&b.type=contractor&b.monthly_pay=9000&b.currency=USD&b.resico_eligible=true&b.planned_time_off_days=15&fx_rate=18&horizon=1&format=html)
+[Calcular dos ofertas de ejemplo](https://sueldo.ai/compare?v=1&methodology=2026.1&a.type=payroll&a.monthly_pay=120000&a.currency=MXN&a.aguinaldo_days=30&a.vacation_days=20&a.vacation_premium_rate=50&b.type=contractor&b.monthly_pay=9000&b.currency=USD&b.resico_eligible=true&b.planned_time_off_days=15&fx_rate=18&horizon=1&format=html)
 
 ```text
-https://sueldo.ai/api/compare?v=1&methodology=2026.1&a.type=payroll&a.monthly_pay=120000&a.currency=MXN&a.aguinaldo_days=30&a.vacation_days=20&a.vacation_premium_rate=50&b.type=contractor&b.monthly_pay=9000&b.currency=USD&b.resico_eligible=true&b.planned_time_off_days=15&fx_rate=18&horizon=1
+https://sueldo.ai/compare?v=1&methodology=2026.1&a.type=payroll&a.monthly_pay=120000&a.currency=MXN&a.aguinaldo_days=30&a.vacation_days=20&a.vacation_premium_rate=50&b.type=contractor&b.monthly_pay=9000&b.currency=USD&b.resico_eligible=true&b.planned_time_off_days=15&fx_rate=18&horizon=1
 ```
 
 El tipo de cambio 18 es solo un supuesto manual de este ejemplo, no una cotización de Banxico. No confirmes RESICO porque el documento diga “contractor”: la persona debe confirmar su elegibilidad.

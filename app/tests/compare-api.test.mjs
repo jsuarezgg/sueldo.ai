@@ -133,3 +133,11 @@ test("Vercel and Sites return identical results and reject writes", async () => 
     assert.match(captured.headers["cache-control"], /no-store/);
   }
 });
+
+test("the public webpage alias returns the same HTML calculation without broad route fallbacks", async () => {
+  const requestUrl = url().replace("/api/compare", "/compare");
+  const site = await worker.fetch(new Request(requestUrl), {});
+  assert.equal(site.headers.get("content-type"), "text/html; charset=utf-8");
+  const direct = await compareRequest(`${url()}&format=html`);
+  assert.equal(await site.text(), await direct.text());
+});

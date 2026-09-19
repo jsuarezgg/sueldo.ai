@@ -45,4 +45,7 @@ test("emits loadable Sites output and the current server implementation", async 
   const comparison = await worker.fetch(new Request("https://example.test/api/compare?a.type=payroll&a.monthly_pay=50000&a.currency=MXN&b.type=payroll&b.monthly_pay=60000&b.currency=MXN"), {});
   assert.equal((await comparison.json()).status, "ok");
   await access(new URL("../dist/client/chatgpt.md", import.meta.url));
+  const guide = await readFile(new URL("../dist/client/chatgpt.html", import.meta.url), "utf8");
+  assert.match(guide, /href="https:\/\/sueldo.ai\/compare\?/);
+  assert.doesNotMatch(guide, /analytics\.js/);
 });

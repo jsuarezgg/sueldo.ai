@@ -6,6 +6,11 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    if (url.pathname === "/compare") {
+      url.searchParams.set("format", "html");
+      return compareRequest(url.href, request.method, env.BANXICO_FETCH ?? fetch);
+    }
+
     if (url.pathname === "/api/compare") {
       return compareRequest(request.url, request.method, env.BANXICO_FETCH ?? fetch);
     }

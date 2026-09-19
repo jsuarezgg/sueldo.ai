@@ -24,5 +24,11 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/compare",
+      "destination": "/api/compare?format=html"
+    }
   ]
 }
