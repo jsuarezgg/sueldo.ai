@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { copyFileSync, existsSync, mkdirSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -25,3 +25,11 @@ copyFileSync(banxico, path.join(dist, "server", "banxico-fix.js"));
 copyFileSync(hosting, path.join(dist, ".openai", "hosting.json"));
 
 console.log("Prepared Sites build: dist/server/index.js and dist/.openai/hosting.json");
+
+// A plain HTML guide is readable by web tools that do not support Markdown responses.
+const guide = readFileSync(path.join(root, "public/chatgpt.md"), "utf8");
+const escape = (text) => text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+const example = guide.match(/```text\n(https:\/\/sueldo\.ai\/compare[^\n]+)\n/)[1];
+writeFileSync(path.join(dist, "client/chatgpt.html"), `<!doctype html>
+<html lang="es-MX"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer"><meta name="description" content="Cómo comparar dos ofertas con sueldo.ai desde ChatGPT, sin instalar apps ni conectar cuentas."><link rel="canonical" href="https://sueldo.ai/chatgpt"><title>Comparar ofertas desde ChatGPT | sueldo.ai</title></head>
+<body><h1>Comparar ofertas desde ChatGPT</h1><p>Sube tus ofertas en una conversación con acceso web y pide: Compara estos PDFs usando sueldo.ai. Lee primero https://sueldo.ai/chatgpt y usa su endpoint público. Pregunta por lo que falte y no envíes datos personales.</p><p>Los parámetros de cálculo viajan en la URL y pueden quedar en registros. No envíes documentos ni datos identificadores.</p><p><a href="${escape(example)}">Abrir comparación sintética de ejemplo</a> · <a href="/">Calculadora</a> · <a href="/privacidad">Privacidad</a></p><pre style="white-space:pre-wrap">${escape(guide)}</pre></body></html>`);

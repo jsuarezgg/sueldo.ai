@@ -79,11 +79,11 @@ At release, enable Web Analytics for the `sueldo-ai` project in the [Vercel dash
 
 ## Public comparison API
 
-`GET /api/compare` runs the existing compensation engine without an account, session, document upload, or comparison persistence. It accepts versioned numeric/structural query parameters and returns JSON, or server-rendered HTML with `format=html` for web readers. The public [ChatGPT guide](./app/public/chatgpt.md) is the contract reference and provides a copyable prompt, synthetic example, missing-input protocol, result semantics, and privacy limits.
+`GET /api/compare` runs the existing compensation engine without an account, session, document upload, or comparison persistence. `/compare` serves the same calculation as HTML; `/chatgpt` is the HTML guide generated from the Markdown contract. It accepts versioned numeric/structural query parameters and returns JSON, or server-rendered HTML with `format=html` for web readers. The public [ChatGPT guide](./app/public/chatgpt.md) is the contract reference and provides a copyable prompt, synthetic example, missing-input protocol, result semantics, and privacy limits.
 
 The API's query parameters are sent to the server and may appear in infrastructure and assistant logs. API responses must use no-store, noindex, and no-referrer, and must not load analytics or log input payloads. The interactive calculator and its `#c=` share URLs retain their browser-side calculation behavior.
 
-Manual release verification: attach two synthetic offer PDFs in an ordinary ChatGPT conversation with web access, ask it to read `https://sueldo.ai/chatgpt.md`, confirm missing essential terms, and retrieve the constructed URL. Check both JSON and HTML retrieval, then open the returned `view_url` and compare cash, economic value, FX, and horizon against the response. Repeat with unconfirmed RESICO to verify that no valid comparison is claimed. Direct HTTP and browser checks establish endpoint correctness; they do not prove ordinary ChatGPT retrieval. Record that gap if the conversation test cannot be performed.
+Manual release verification: attach two synthetic offer PDFs in an ordinary ChatGPT conversation with web access, ask it to read `https://sueldo.ai/chatgpt`, confirm missing essential terms, and retrieve the constructed URL. Check both JSON and HTML retrieval, then open the returned `view_url` and compare cash, economic value, FX, and horizon against the response. Repeat with unconfirmed RESICO to verify that no valid comparison is claimed. Direct HTTP and browser checks establish endpoint correctness; they do not prove ordinary ChatGPT retrieval. Record that gap if the conversation test cannot be performed.
 
 ## Search discovery
 
