@@ -6,6 +6,11 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    if (url.pathname === "/chatgpt" || url.pathname === "/chatgpt.md") {
+      url.pathname = url.pathname === "/chatgpt" ? "/ai" : "/ai.md";
+      return Response.redirect(url.href, 308);
+    }
+
     if (url.pathname === "/compare") {
       url.searchParams.set("format", "html");
       return compareRequest(url.href, request.method, env.BANXICO_FETCH ?? fetch);

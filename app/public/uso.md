@@ -18,9 +18,9 @@ sueldo.ai es una calculadora gratuita y sin registro para comparar cualquier par
 7. Abre los desgloses y las fuentes antes de tomar una decisión.
 8. Si quieres compartir el resultado, genera el enlace. La URL restaura ambas ofertas, todos los números y supuestos, y el horizonte elegido. Cualquier persona con el enlace puede ver la comparación.
 
-## Usar desde ChatGPT
+## Usar desde un asistente de IA
 
-Puedes adjuntar dos PDFs a una conversación con acceso web y pedir: “Compara estas ofertas usando sueldo.ai; lee primero https://sueldo.ai/chatgpt”. No requiere instalar una app ni vincular una cuenta. El asistente extrae parámetros y consulta el mismo motor mediante una URL pública. La recuperación depende de las capacidades de la conversación y no está garantizada. Esta vía envía parámetros al servidor: revisa la sección de privacidad antes de usarla.
+Puedes adjuntar dos PDFs a una conversación con acceso web y pedir: “Compara estas ofertas usando sueldo.ai; lee primero https://sueldo.ai/ai”. No requiere instalar una app ni vincular una cuenta. El asistente extrae parámetros y consulta el mismo motor mediante una URL pública. La recuperación depende de las capacidades de la conversación y no está garantizada. Esta vía envía parámetros al servidor: revisa la sección de privacidad antes de usarla.
 
 ## Datos que acepta
 

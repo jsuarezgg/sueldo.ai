@@ -70,8 +70,8 @@ test("sitemap dates reflect each page's last material change", async () => {
     ["https://sueldo.ai/privacidad", "2026-09-18"],
     ["https://sueldo.ai/terminos", "2026-08-30"],
     ["https://sueldo.ai/uso.md", "2026-09-18"],
-    ["https://sueldo.ai/chatgpt.md", "2026-09-18"],
-    ["https://sueldo.ai/chatgpt", "2026-09-18"],
+    ["https://sueldo.ai/ai.md", "2026-09-18"],
+    ["https://sueldo.ai/ai", "2026-09-18"],
   ]);
 });
 

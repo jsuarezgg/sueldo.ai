@@ -16,7 +16,7 @@
       ]
     },
     {
-      "source": "/chatgpt.md",
+      "source": "/ai.md",
       "headers": [
         {
           "key": "Content-Type",
@@ -29,6 +29,18 @@
     {
       "source": "/compare",
       "destination": "/api/compare?format=html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/chatgpt",
+      "destination": "/ai",
+      "permanent": true
+    },
+    {
+      "source": "/chatgpt.md",
+      "destination": "/ai.md",
+      "permanent": true
     }
   ]
 }
