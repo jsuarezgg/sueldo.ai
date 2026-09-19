@@ -79,6 +79,24 @@ test("unknown fields, duplicate keys and oversized URLs fail without reflecting 
   }
 });
 
+test("common tracking parameters do not change a comparison or relax compensation validation", async () => {
+  const cleanUrl = url().replace("/api/compare", "/compare");
+  const clean = await (await compareRequest(cleanUrl)).text();
+  for (const tracking of ["utm_source=chatgpt.com", "utm_source=chatgpt.com&utm_source=duplicate&utm_medium=referral&utm_campaign=offers&utm_content=link&utm_term=salary"]) {
+    const tracked = `${cleanUrl}&${tracking}`;
+    const response = await compareRequest(tracked);
+    assert.equal(response.status, 200);
+    assert.equal(await response.text(), clean);
+    assert.equal(await (await worker.fetch(new Request(tracked), {})).text(), clean);
+    assert.deepEqual(await (await compareRequest(tracked.replace("/compare", "/api/compare"))).json(), embeddedResult(clean));
+    for (const invalid of ["a.monthly_salary=120000", "a.monthly_pay=1", "utm_salary=120000"]) {
+      const rejected = await compareRequest(`${tracked}&${invalid}`);
+      assert.equal(rejected.status, 400);
+      assert.equal(embeddedResult(await rejected.text()).status, "invalid_input");
+    }
+  }
+});
+
 test("live FX carries actual provenance, times out, and fails closed with actionable error", async () => {
   let signal;
   const { body } = await calculate({ fx_rate: undefined, fx_date: undefined }, async (_url, options) => {

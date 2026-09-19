@@ -5,7 +5,7 @@
 - **Ruta recomendada para asistentes con acceso web:** https://sueldo.ai/compare
 - API JSON para clientes capaces de consumirla: https://sueldo.ai/api/compare
 - Contrato: `v=1`. Metodología: `2026.1`. Año fiscal base: 2026.
-- Actualización: 18 de septiembre de 2026.
+- Actualización: 19 de septiembre de 2026.
 
 No necesitas instalar una app, conectar una cuenta ni configurar un plugin. El asistente lee los PDFs y extrae los términos; sueldo.ai calcula usando el mismo motor que la calculadora. El contrato es independiente del proveedor: puede usarlo ChatGPT, Claude, Gemini u otro asistente que pueda leer archivos y recuperar URLs públicas. La conversación necesita esas capacidades; no se garantiza que estén disponibles en todos los productos o modos. Que un asistente pueda abrir páginas no garantiza que pueda recuperar todas las URLs generadas: esta integración es un experimento, no una integración nativa de un proveedor de IA.
 
@@ -16,7 +16,7 @@ No necesitas instalar una app, conectar una cuenta ni configurar un plugin. El a
 ## Flujo para el asistente
 
 1. Lee los documentos y distingue salario bruto de neto, periodicidad, moneda, relación contractual y beneficios. No adivines importes ni conviertas un salario neto a bruto.
-2. Usa `a` y `b` como etiquetas. Un monto anual de salario base explícito puede dividirse entre 12; no dividas un paquete total que incluya bonos o equity como si fuera salario base.
+2. Usa `a` y `b` como etiquetas. Un monto anual de salario base explícito puede dividirse entre 12; no dividas un paquete total que incluya bonos o equity como si fuera salario base. `monthly_pay` es solo el salario base bruto mensual; registra bonos por separado en `components` y prestaciones en sus campos. Si solo conoces el total del paquete, pregunta por el desglose antes de calcular.
 3. Construye una URL GET con los campos documentados. No subas documentos ni texto, nombres de empresa o identificadores personales. Codifica los valores con las reglas estándar de query string, sin doble codificación.
 4. **Recupera `/compare?...` como página web.** Es la ruta recomendada para asistentes con acceso web genérico; no necesita JavaScript. El HTML inicial incluye el resultado completo visible en `<pre id="sueldo-result-text">` y el mismo objeto en `<script id="sueldo-result" type="application/json">`. Ese bloque es datos, no código ejecutable. Si tu lector elimina las etiquetas script, lee el JSON visible. Reserva `/api/compare?...` para clientes que puedan consumir APIs JSON con fiabilidad. Ambas rutas y la calculadora interactiva usan exactamente el mismo motor.
 5. Lee `status` antes de explicar cifras. Para `needs_input`, pregunta solo por los campos faltantes. Para `invalid_input`, explica los errores y corrige los parámetros; no presentes una comparación válida. Para `unavailable`, no inventes resultados ni un tipo de cambio.
@@ -62,14 +62,26 @@ https://sueldo.ai/compare?v=1&methodology=2026.1&a.type=payroll&a.monthly_pay=12
 
 Esperado: `status: "needs_input"` y `missing_fields` con `field: "b.resico_eligible"`, una `question` y valores booleanos esperados. Pregunta a la persona esa cuestión; no presentes cifras válidas todavía. Si confirma elegibilidad, agrega `b.resico_eligible=true` y recupera la URL del caso 2. Si responde que no, envía `false`: se obtiene `invalid_input` porque el motor no implementa otro régimen contractor. No sugieras cambiar la respuesta a `true` para conseguir un resultado.
 
+### 4. Salario base y bono anual separados
+
+El PDF A desglosa MXN 1,200,000 de salario base bruto anual y MXN 120,000 de bono anual bruto en efectivo (tratamiento gravado confirmado): suma base + bono de MXN 1,320,000, antes de otras prestaciones. El PDF B ofrece el mismo salario base sin bono. Usa `a.monthly_pay=100000` (1,200,000 / 12), no `110000` (1,320,000 / 12), y registra el bono una sola vez en `a.components`. Las prestaciones de ley se calculan aparte y sus valores predeterminados se declaran en `assumptions`.
+
+[Recuperar salario base con bono separado](https://sueldo.ai/compare?v=1&methodology=2026.1&a.type=payroll&a.monthly_pay=100000&a.currency=MXN&a.components=%5B%7B%22category%22%3A%22bonus%22%2C%22amount%22%3A120000%2C%22frequency%22%3A%22annual%22%2C%22currency%22%3A%22MXN%22%2C%22taxable%22%3Atrue%2C%22cash%22%3Atrue%7D%5D&b.type=payroll&b.monthly_pay=100000&b.currency=MXN&horizon=1)
+
+```text
+https://sueldo.ai/compare?v=1&methodology=2026.1&a.type=payroll&a.monthly_pay=100000&a.currency=MXN&a.components=%5B%7B%22category%22%3A%22bonus%22%2C%22amount%22%3A120000%2C%22frequency%22%3A%22annual%22%2C%22currency%22%3A%22MXN%22%2C%22taxable%22%3Atrue%2C%22cash%22%3Atrue%7D%5D&b.type=payroll&b.monthly_pay=100000&b.currency=MXN&horizon=1
+```
+
+Esperado: `status: "ok"`, `offer_a.monthlyGross: 100000`, `offer_a.gross: 1200000` y `offer_a.bonuses: 120000`. `gross` es el salario base acumulado; no incluye el bono. El bono afecta el efectivo anual y sus impuestos, pero no convierte el salario base mensual en 110,000. Explica las condiciones de pago del bono y devuelve `view_url`.
+
 ## Parámetros de entrada
 
-Cada campo de oferta lleva el prefijo `a.` o `b.`. Usa números decimales no negativos (máximo 1,000,000,000), sin símbolos de moneda, separadores de miles ni notación científica. Los porcentajes usan puntos porcentuales: `25` significa 25%, no `0.25`. Los booleanos son `true` o `false`. En campos de oferta, `horizon` y `fx_rate`, un valor explícito `null` o vacío indica información pendiente y produce `needs_input`; omitir un campo opcional permite aplicar el valor predeterminado, que se declara en `assumptions`. No repitas claves ni envíes campos desconocidos. `v`, `methodology`, `format` y `fx_date` deben omitirse o usar sus valores válidos documentados.
+Cada campo de oferta lleva el prefijo `a.` o `b.`. Usa números decimales no negativos (máximo 1,000,000,000), sin símbolos de moneda, separadores de miles ni notación científica. Los porcentajes usan puntos porcentuales: `25` significa 25%, no `0.25`. Los booleanos son `true` o `false`. En campos de oferta, `horizon` y `fx_rate`, un valor explícito `null` o vacío indica información pendiente y produce `needs_input`; omitir un campo opcional permite aplicar el valor predeterminado, que se declara en `assumptions`. No repitas claves ni envíes campos desconocidos. Se ignoran únicamente los parámetros de seguimiento `utm_source`, `utm_medium`, `utm_campaign`, `utm_content` y `utm_term` que agreguen los lectores web; no afectan el cálculo. Los campos de compensación desconocidos siguen siendo inválidos. `v`, `methodology`, `format` y `fx_date` deben omitirse o usar sus valores válidos documentados.
 
 | Campo por oferta | Valor y significado | Si se omite |
 | --- | --- | --- |
 | `type` | `payroll` o `contractor` | Obligatorio |
-| `monthly_pay` | Pago **bruto mensual** positivo, en la moneda de la oferta | Obligatorio |
+| `monthly_pay` | **Salario base bruto mensual** positivo, en la moneda de la oferta; excluye bonos, prestaciones y equity modelados por separado | Obligatorio |
 | `currency` | `MXN` o `USD` | Obligatorio |
 | `resico_eligible` | Confirmación personal `true` para contractor; `false` bloquea el cálculo | Obligatorio para contractor |
 | `additional_deductions` | Deducciones adicionales mensuales, MXN | 0 |
