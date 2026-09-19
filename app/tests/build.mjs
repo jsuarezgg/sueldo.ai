@@ -28,6 +28,7 @@ test("emits loadable Sites output and the current server implementation", async 
     ["worker/index.js", "server/index.js"],
     ["server/banxico-fix.js", "server/banxico-fix.js"],
     ["server/compare.js", "server/compare.js"],
+    ["server/compare-output.js", "server/compare-output.js"],
     ["src/compensation.js", "src/compensation.js"],
     ["src/share-link.js", "src/share-link.js"],
   ]) {
@@ -48,4 +49,13 @@ test("emits loadable Sites output and the current server implementation", async 
   const guide = await readFile(new URL("../dist/client/ai.html", import.meta.url), "utf8");
   assert.match(guide, /href="https:\/\/sueldo.ai\/compare\?/);
   assert.doesNotMatch(guide, /analytics\.js/);
+  const examples = [...guide.matchAll(/href="(https:\/\/sueldo.ai\/compare\?[^"]+)"/g)];
+  const statuses = [];
+  for (const [, encodedUrl] of examples) {
+    const example = await worker.fetch(new Request(encodedUrl.replaceAll("&amp;", "&")), {});
+    const html = await example.text();
+    const data = html.match(/<script id="sueldo-result" type="application\/json">([\s\S]*?)<\/script>/)[1];
+    statuses.push(JSON.parse(data).status);
+  }
+  assert.deepEqual(statuses, ["ok", "ok", "needs_input"]);
 });

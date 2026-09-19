@@ -39,7 +39,7 @@ const banxicoDevApi = {
   name: "banxico-dev-api",
   configureServer(server) {
     server.middlewares.use(async (request, response, next) => {
-      if (new URL(request.url, "http://localhost").pathname !== "/api/compare") return next();
+      if (!["/api/compare", "/compare"].includes(new URL(request.url, "http://localhost").pathname)) return next();
       await compareHandler(request, {
         setHeader: (key, value) => response.setHeader(key, value),
         status: (code) => {

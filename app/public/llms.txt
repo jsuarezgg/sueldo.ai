@@ -6,7 +6,7 @@ Idioma principal: español de México.
 
 ## Referencia principal
 
-- [Comparar PDFs desde un asistente de IA sin instalación](https://sueldo.ai/ai): contrato GET público, extracción, campos obligatorios, resultados y privacidad. Leer antes de construir una URL de cálculo.
+- [Comparar PDFs desde un asistente de IA sin instalación](https://sueldo.ai/ai): usar /compare?... para acceso web genérico: HTML inicial con JSON completo visible, sin JavaScript. Incluye extracción, contrato, ejemplos, preguntas por datos faltantes y privacidad; /api/compare?... se reserva para clientes JSON. Leer antes de construir una URL de cálculo.
 
 - [Guía completa en Markdown](https://sueldo.ai/uso.md): uso, interpretación, alcance, límites, privacidad y fuentes.
 - [Calculadora](https://sueldo.ai/): flujo interactivo de comparación.

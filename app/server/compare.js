@@ -1,16 +1,10 @@
 import { calculateComparison, defaultStatutoryBenefits, statutoryVacationDays, TAX_YEAR } from "../src/compensation.js";
 import { createShareUrl } from "../src/share-link.js";
 import { fetchBanxicoFix } from "./banxico-fix.js";
+import { comparisonResponse as reply, inputIssue, summarizeOffer } from "./compare-output.js";
 
 export const METHODOLOGY_VERSION = "2026.1";
 export const MAX_URL_BYTES = 8000;
-const HEADERS = {
-  "Cache-Control": "private, no-store, max-age=0",
-  "X-Robots-Tag": "noindex, nofollow, noarchive",
-  "Referrer-Policy": "no-referrer",
-  "X-Content-Type-Options": "nosniff",
-  "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'; base-uri 'none'",
-};
 const COSTS = {
   additional_deductions: "additionalDeductions", accountant: "accountant",
   fx_fee: "fxFee", insurance: "insurance", planned_time_off_days: "plannedTimeOffDays",
@@ -26,33 +20,30 @@ const OFFER_FIELDS = ["type", "monthly_pay", "currency", "resico_eligible", "com
 const KEYS = new Set(["v", "methodology", "horizon", "format", "fx_rate", "fx_date", ...["a", "b"].flatMap((id) => OFFER_FIELDS.map((field) => `${id}.${field}`))]);
 const object = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 const numeric = (value) => typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 1e9;
-const escapeHtml = (value) => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
-
-function reply(body, status, html = false, extraHeaders = {}) {
-  const headers = { ...HEADERS, ...extraHeaders, "Content-Type": html ? "text/html; charset=utf-8" : "application/json; charset=utf-8" };
-  const json = JSON.stringify(body, null, 2);
-  const content = html
-    ? `<!doctype html><html lang="es-MX"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>Comparación sueldo.ai</title></head><body><h1>Resultado de sueldo.ai</h1><p>Metodología ${METHODOLOGY_VERSION}. Importes en MXN. Diferencias: B menos A.</p>${body.view_url ? `<p><a rel="noreferrer" href="${escapeHtml(body.view_url)}">Abrir comparación interactiva</a></p>` : ""}<pre>${escapeHtml(json)}</pre></body></html>`
-    : json;
-  return new Response(content, { status, headers });
+function externalField(id, field) {
+  if (field === "fxRate") return "fx_rate";
+  const names = { monthlyPay: "monthly_pay", relationship: "type", resicoEligibilityStatus: "resico_eligible" };
+  const reverse = (map, name) => Object.entries(map).find(([, internal]) => internal === name)?.[0];
+  if (field.startsWith("statutoryBenefits.")) return `${id}.${reverse(BENEFITS, field.split(".")[1])}`;
+  return `${id}.${names[field] ?? reverse(COSTS, field) ?? field}`;
 }
 
 // This adapter only normalizes and validates inputs. All compensation arithmetic stays in the shared engine.
 export async function compareRequest(urlString, method = "GET", fetchImpl = fetch) {
   const meta = { api_version: 1, tax_year: TAX_YEAR, methodology_version: METHODOLOGY_VERSION, documentation_url: "https://sueldo.ai/ai" };
-  if (method !== "GET") return reply({ ...meta, status: "invalid_input", errors: [{ field: "method", reason: "Use GET." }] }, 405, false, { Allow: "GET" });
-  if (new TextEncoder().encode(urlString).length > MAX_URL_BYTES) {
-    return reply({ ...meta, status: "invalid_input", errors: [{ field: "url", reason: "URL exceeds 8000 bytes. Use fewer components or the interactive calculator." }] }, 414);
-  }
   const url = new URL(urlString, "https://sueldo.ai");
+  const html = url.pathname === "/compare" || url.searchParams.get("format") === "html";
+  if (method !== "GET") return reply({ ...meta, status: "invalid_input", errors: [inputIssue("method", "Use GET.", "method_not_allowed")] }, 405, html, { Allow: "GET" });
+  if (new TextEncoder().encode(urlString).length > MAX_URL_BYTES) {
+    return reply({ ...meta, status: "invalid_input", errors: [inputIssue("url", "URL exceeds 8000 bytes. Use the interactive calculator; do not omit compensation terms.", "url_too_long")] }, 414, html);
+  }
   const params = url.searchParams;
-  const html = params.get("format") === "html";
   const errors = [];
   const missing = [];
   const assumptions = [];
   const warnings = [{ code: "estimate", message: "Estimación según la metodología publicada; no es asesoría fiscal. Cash, protección, aportaciones patronales y equity no son equivalentes." }];
-  const fail = (field, reason) => errors.push({ field, reason });
-  const need = (field, reason = "Provide this value or confirm the applicable assumption.") => missing.push({ field, reason });
+  const fail = (field, reason) => errors.push(inputIssue(field, reason));
+  const need = (field, reason = "Provide this value or confirm the applicable assumption.") => missing.push(inputIssue(field, reason, "missing_value"));
   for (const key of new Set(params.keys())) {
     if (!KEYS.has(key)) fail("query", "Unknown parameter. Send only documented compensation fields; no names or document text.");
     else if (params.getAll(key).length !== 1) fail(key, "Duplicate parameter.");
@@ -76,7 +67,9 @@ export async function compareRequest(urlString, method = "GET", fetchImpl = fetc
     return Number(raw);
   }
   function bool(field, fallback) {
+    const count = assumptions.length;
     const result = value(field, fallback === undefined ? undefined : String(fallback), ["true", "false"]);
+    if (assumptions.length > count) assumptions.at(-1).value = fallback;
     return result === "true";
   }
   function jsonField(field, fallback) {
@@ -175,20 +168,32 @@ export async function compareRequest(urlString, method = "GET", fetchImpl = fetc
       const fix = await fetchBanxicoFix((url, options) => fetchImpl(url, { ...options, signal: AbortSignal.timeout(5000) }));
       fx = { ...fix, source: "Banxico FIX", verified: true };
     } catch {
-      return reply({ ...base, status: "unavailable", missing_fields: [{ field: "fx_rate", reason: "Banxico FIX unavailable; retry or provide an explicitly confirmed manual rate." }] }, 503, html);
+      return reply({ ...base, status: "unavailable", missing_fields: [inputIssue("fx_rate", "Banxico FIX unavailable; retry or provide an explicitly confirmed manual rate.", "fx_unavailable")] }, 503, html);
     }
   }
   if (fx.source === "manual") warnings.push({ code: "manual_fx", message: "Tipo de cambio proporcionado; sueldo.ai no verificó su fuente o fecha." });
   const calculationAssumptions = { fxRate: fx.rate, fxDate: fx.date, fxStatus: fx.verified ? "ready" : "manual", fxManual: !fx.verified };
   const result = calculateComparison(offers, calculationAssumptions, horizon);
   if (!result.valid) {
-    const engineErrors = Object.entries({ a: result.employee, b: result.contractor }).flatMap(([id, item]) => item.invalidReasons.map((reason) => ({ field: id, reason })));
+    const engineErrors = Object.entries({ a: result.employee, b: result.contractor }).flatMap(([id, item]) => {
+      const issues = item.inputErrors.map((error) => inputIssue(externalField(id, error.field), error.message, "engine_validation"));
+      for (const reason of new Set(item.invalidReasons)) {
+        if (!item.inputErrors.some((error) => error.message === reason)) {
+          issues.push({ ...inputIssue(`${id}.resico_eligible`, reason, "unsupported_tax_profile"), question: "¿Puedes revisar los ingresos y el régimen fiscal? No confirmes RESICO si no cumples sus requisitos; sueldo.ai no calcula otro régimen para contractor." });
+        }
+      }
+      return issues;
+    });
     return reply({ ...base, fx, status: "invalid_input", errors: engineErrors }, 400, html);
   }
+  warnings.push({ code: "contingent_value_scope", message: "El valor contingente cuantificado es solo equity neto modelado, ya incluido en el valor económico. El motor no clasifica ni ajusta por probabilidad todos los bonos o PTU." });
+  const summary = { contingent_value_basis: "modeled_vested_equity_net_only", offer_a: summarizeOffer(offers.employee, result.employee), offer_b: summarizeOffer(offers.contractor, result.contractor) };
   const viewUrl = createShareUrl({ offers, assumptions: calculationAssumptions, horizon });
-  return reply({ ...base, status: "ok", currency: "MXN", fx, horizon_months: result.months, view_url: viewUrl, comparison: {
+  return reply({ ...base, status: "ok", currency: "MXN", summary, fx, horizon_months: result.months, view_url: viewUrl, comparison: {
     regular_cash_difference: result.contractor.regularCash - result.employee.regularCash,
     economic_value_difference: result.contractor.economicValue - result.employee.economicValue,
+    contingent_value_difference: result.contractor.equityNet - result.employee.equityNet,
+    average_monthly_cash_difference: result.contractor.averageMonthlyCash - result.employee.averageMonthlyCash,
     recurring_monthly_cash_difference: result.contractor.recurringMonthlyCash - result.employee.recurringMonthlyCash,
   }, offer_a: result.employee, offer_b: result.contractor, normalized_input: { offers, assumptions: calculationAssumptions, horizon } }, 200, html);
 }
