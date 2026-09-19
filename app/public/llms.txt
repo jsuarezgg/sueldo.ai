@@ -6,6 +6,8 @@ Idioma principal: español de México.
 
 ## Referencia principal
 
+- [Comparar PDFs desde ChatGPT sin instalación](https://sueldo.ai/chatgpt.md): contrato GET público, extracción, campos obligatorios, resultados y privacidad. Leer antes de construir una URL de cálculo.
+
 - [Guía completa en Markdown](https://sueldo.ai/uso.md): uso, interpretación, alcance, límites, privacidad y fuentes.
 - [Calculadora](https://sueldo.ai/): flujo interactivo de comparación.
 - [Metodología y fuentes](https://sueldo.ai/metodologia): reglas y supuestos que usa el cálculo.

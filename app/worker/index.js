@@ -1,8 +1,14 @@
 import { BANXICO_CACHE_CONTROL, fetchBanxicoFix } from "../server/banxico-fix.js";
 
+import { compareRequest } from "../server/compare.js";
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    if (url.pathname === "/api/compare") {
+      return compareRequest(request.url, request.method, env.BANXICO_FETCH ?? fetch);
+    }
 
     if (url.pathname === "/api/fx") {
       if (request.method !== "GET") {

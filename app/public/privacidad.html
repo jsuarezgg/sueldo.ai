@@ -17,7 +17,7 @@
     <meta property="og:locale" content="es_MX" />
     <meta property="og:site_name" content="sueldo.ai" />
     <meta property="og:title" content="Privacidad en sueldo.ai" />
-    <meta property="og:description" content="Los datos de las ofertas se calculan en el navegador y no se guardan en una cuenta o base de datos." />
+    <meta property="og:description" content="La calculadora funciona en el navegador. El cálculo opcional por URL envía los parámetros al servidor; no requiere cuenta ni guarda comparaciones en una base de datos." />
     <meta property="og:url" content="https://sueldo.ai/privacidad" />
     <meta property="og:image" content="https://sueldo.ai/og-image.png" />
   </head>
@@ -35,8 +35,8 @@
         <header class="article-header">
           <h1>Privacidad</h1>
           <p class="lede">
-            La versión actual de sueldo.ai procesa los datos de las ofertas en el navegador. No crea cuentas ni
-            guarda una comparación en una base de datos.
+            La calculadora interactiva procesa las ofertas en el navegador. El cálculo opcional por URL envía
+            los parámetros al servidor. Ninguna de las dos vías requiere una cuenta ni guarda comparaciones en una base de datos.
           </p>
           <p class="article-meta">Última actualización: 18 de septiembre de 2026</p>
         </header>
@@ -45,7 +45,7 @@
           <h2>Datos que capturas</h2>
           <p>
             Pagos, nombres de referencia, prestaciones, costos, supuestos y RSUs viven en la memoria de la pestaña
-            durante la captura. No se envían al servidor de sueldo.ai. Al compartir, esos datos se codifican en el
+            durante la captura en la calculadora interactiva. En ese flujo no se envían al servidor de sueldo.ai. Al compartir, esos datos se codifican en el
             fragmento del enlace para que la persona que lo abra pueda restaurar la comparación.
           </p>
           <p>
@@ -74,6 +74,28 @@
         </section>
 
         <section class="article-section">
+          <h2>Cálculo por URL y uso desde ChatGPT</h2>
+          <p>
+            Si eliges usar <code>/api/compare</code>, los números y opciones de las ofertas viajan en los parámetros
+            de la URL hasta el servidor para calcular el resultado. Es un flujo opcional y distinto de la calculadora
+            local. No necesita PDFs, nombres, correos, RFC, CURP, domicilios ni texto del contrato. Usa únicamente
+            datos numéricos y opciones necesarios para comparar.
+          </p>
+          <p>
+            La URL puede quedar en el historial del navegador, la conversación del asistente, el portapapeles y los
+            registros de infraestructura, proxies o herramientas de monitoreo. La respuesta pide no almacenarse en
+            caché ni indexarse y no incluye analítica. Estas medidas no borran ni impiden todos los registros externos.
+            No uses esta vía con información que no puedas exponer a esos servicios. Puedes capturar las ofertas
+            directamente en la calculadora local si prefieres evitar enviar los parámetros de cálculo al servidor.
+          </p>
+          <p>
+            sueldo.ai no recibe los PDFs que subes a ChatGPT: el asistente extrae los parámetros. Los documentos,
+            la conversación y las URLs que maneje ChatGPT están sujetos a las políticas y configuración de ese servicio.
+            El enlace interactivo devuelto contiene la comparación completa; trátalo como información sensible.
+          </p>
+        </section>
+
+        <section class="article-section">
           <h2>Enlaces y tarjetas para compartir</h2>
           <p>
             El enlace para compartir contiene ambas ofertas, sus números, supuestos, tipo de cambio y horizonte.
@@ -95,7 +117,7 @@
             navegador y ubicación aproximada.
           </p>
           <p>
-            No enviamos los datos de tus ofertas ni registramos lo que capturas en la calculadora. Antes de enviar
+            No enviamos datos de tus ofertas a Web Analytics ni registramos lo que capturas en la calculadora. La respuesta de cálculo por URL no carga analítica. Antes de enviar
             la dirección de una página a la analítica, eliminamos sus parámetros de consulta y su fragmento,
             incluido el enlace de comparación que comienza con <code>#c=</code>.
           </p>
@@ -119,7 +141,7 @@
 
     <footer class="site-footer">
       <div class="content-shell site-footer-inner">
-        <span>sueldo.ai · Comparaciones locales a la sesión</span>
+        <span>sueldo.ai · Comparaciones sin cuenta</span>
         <nav aria-label="Enlaces legales"><a href="/acerca">Acerca</a><a href="/terminos">Términos</a></nav>
       </div>
     </footer>

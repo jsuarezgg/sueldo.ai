@@ -1,17 +1,21 @@
 User-agent: OAI-SearchBot
 Allow: /
 Disallow: /api/
+Allow: /api/compare
 
 User-agent: PerplexityBot
 Allow: /
 Disallow: /api/
+Allow: /api/compare
 
 User-agent: Claude-SearchBot
 Allow: /
 Disallow: /api/
+Allow: /api/compare
 
 User-agent: *
 Allow: /
 Disallow: /api/
+Allow: /api/compare
 
 Sitemap: https://sueldo.ai/sitemap.xml
