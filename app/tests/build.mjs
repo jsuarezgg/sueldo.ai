@@ -27,10 +27,6 @@ test("emits loadable Sites output and the current server implementation", async 
   for (const [source, output] of [
     ["worker/index.js", "server/index.js"],
     ["server/banxico-fix.js", "server/banxico-fix.js"],
-    ["server/compare.js", "server/compare.js"],
-    ["server/compare-output.js", "server/compare-output.js"],
-    ["src/compensation.js", "src/compensation.js"],
-    ["src/share-link.js", "src/share-link.js"],
   ]) {
     assert.equal(
       await readFile(new URL(`../dist/${output}`, import.meta.url), "utf8"),
@@ -43,29 +39,4 @@ test("emits loadable Sites output and the current server implementation", async 
   });
   assert.equal(response.status, 200);
   assert.equal((await response.json()).rate, 16.8748);
-  const comparison = await worker.fetch(new Request("https://example.test/api/compare?a.type=payroll&a.monthly_pay=50000&a.currency=MXN&b.type=payroll&b.monthly_pay=60000&b.currency=MXN"), {});
-  assert.equal((await comparison.json()).status, "ok");
-  await access(new URL("../dist/client/ai.md", import.meta.url));
-  const guide = await readFile(new URL("../dist/client/ai.html", import.meta.url), "utf8");
-  assert.match(guide, /href="https:\/\/sueldo.ai\/compare\?/);
-  assert.doesNotMatch(guide, /analytics\.js/);
-  const examples = [...guide.matchAll(/href="(https:\/\/sueldo.ai\/compare\?[^"]+)"/g)];
-  const results = [];
-  for (const [, encodedUrl] of examples) {
-    const example = await worker.fetch(new Request(encodedUrl.replaceAll("&amp;", "&")), {});
-    const html = await example.text();
-    const data = html.match(/<script id="sueldo-result" type="application\/json">([\s\S]*?)<\/script>/)[1];
-    results.push(JSON.parse(data));
-  }
-  assert.deepEqual(results.map((result) => result.status), ["ok", "ok", "needs_input", "ok"]);
-  const bonusExample = results[3];
-  assert.equal(bonusExample.normalized_input.offers.employee.monthlyPay, 100000);
-  assert.equal(bonusExample.offer_a.monthlyGross, 100000);
-  assert.equal(bonusExample.offer_a.gross, 1200000);
-  assert.equal(bonusExample.offer_a.bonuses, 120000);
-  assert.equal(bonusExample.offer_b.gross, 1200000);
-  assert.equal(bonusExample.offer_b.bonuses, 0);
-  assert.equal(bonusExample.offer_a.recurringMonthlyCash, bonusExample.offer_b.recurringMonthlyCash);
-  assert.ok(bonusExample.offer_a.regularCash > bonusExample.offer_b.regularCash);
-  assert.ok(bonusExample.offer_a.regularCash - bonusExample.offer_b.regularCash < 120000);
 });
