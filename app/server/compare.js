@@ -38,6 +38,8 @@ export async function compareRequest(urlString, method = "GET", fetchImpl = fetc
     return reply({ ...meta, status: "invalid_input", errors: [inputIssue("url", "URL exceeds 8000 bytes. Use the interactive calculator; do not omit compensation terms.", "url_too_long")] }, 414, html);
   }
   const params = url.searchParams;
+  // Link tracking is transport metadata, never compensation input.
+  for (const key of ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]) params.delete(key);
   const errors = [];
   const missing = [];
   const assumptions = [];

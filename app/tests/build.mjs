@@ -50,12 +50,22 @@ test("emits loadable Sites output and the current server implementation", async 
   assert.match(guide, /href="https:\/\/sueldo.ai\/compare\?/);
   assert.doesNotMatch(guide, /analytics\.js/);
   const examples = [...guide.matchAll(/href="(https:\/\/sueldo.ai\/compare\?[^"]+)"/g)];
-  const statuses = [];
+  const results = [];
   for (const [, encodedUrl] of examples) {
     const example = await worker.fetch(new Request(encodedUrl.replaceAll("&amp;", "&")), {});
     const html = await example.text();
     const data = html.match(/<script id="sueldo-result" type="application\/json">([\s\S]*?)<\/script>/)[1];
-    statuses.push(JSON.parse(data).status);
+    results.push(JSON.parse(data));
   }
-  assert.deepEqual(statuses, ["ok", "ok", "needs_input"]);
+  assert.deepEqual(results.map((result) => result.status), ["ok", "ok", "needs_input", "ok"]);
+  const bonusExample = results[3];
+  assert.equal(bonusExample.normalized_input.offers.employee.monthlyPay, 100000);
+  assert.equal(bonusExample.offer_a.monthlyGross, 100000);
+  assert.equal(bonusExample.offer_a.gross, 1200000);
+  assert.equal(bonusExample.offer_a.bonuses, 120000);
+  assert.equal(bonusExample.offer_b.gross, 1200000);
+  assert.equal(bonusExample.offer_b.bonuses, 0);
+  assert.equal(bonusExample.offer_a.recurringMonthlyCash, bonusExample.offer_b.recurringMonthlyCash);
+  assert.ok(bonusExample.offer_a.regularCash > bonusExample.offer_b.regularCash);
+  assert.ok(bonusExample.offer_a.regularCash - bonusExample.offer_b.regularCash < 120000);
 });
