@@ -1,6 +1,5 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import compareHandler from "./api/compare.js";
 import { BANXICO_CACHE_CONTROL, fetchBanxicoFix } from "./server/banxico-fix.js";
 
 const CLEAN_STATIC_ROUTES = new Set([
@@ -38,16 +37,6 @@ const cleanStaticRoutes = {
 const banxicoDevApi = {
   name: "banxico-dev-api",
   configureServer(server) {
-    server.middlewares.use(async (request, response, next) => {
-      if (!["/api/compare", "/compare"].includes(new URL(request.url, "http://localhost").pathname)) return next();
-      await compareHandler(request, {
-        setHeader: (key, value) => response.setHeader(key, value),
-        status: (code) => {
-          response.statusCode = code;
-          return { send: (body) => response.end(body) };
-        },
-      });
-    });
     server.middlewares.use("/api/fx", async (request, response) => {
       if (request.method !== "GET") {
         response.statusCode = 405;

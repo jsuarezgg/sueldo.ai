@@ -26,12 +26,11 @@ This document records product-market and calculation context only. It intentiona
 
 ## Data and privacy behavior
 
-- Interactive calculator comparisons are processed in the browser. The optional public `GET /api/compare` surface sends numeric and structural offer inputs in the URL to the server and runs the same engine without an account, session, database write, or PDF ingestion.
-- GET calculation URLs expose offer parameters to the assistant and infrastructure processing the request and may enter logs or history. No-store, noindex, referrer restrictions, and no application-level input logging reduce exposure but cannot guarantee deletion or absence of third-party logs. Do not accept identifying data or document text in this API.
+- Comparisons are processed in the browser; the published product does not require an account or store a comparison in a database.
 - A shared comparison is a versioned, self-contained URL fragment containing both offers, editable assumptions, selected horizon, and result state. The fragment is not sent in the HTTP request, but anyone with the full URL can decode and view it.
 - Generated share summaries are anonymous by default. Identifying names and monetary amounts are included only through an explicit user choice.
 - The `/api/fx` request contains no offer data.
-- Vercel Web Analytics records page views on the public domains only. The analytics hook removes query strings and URL fragments (including `#c=`) before sending page URLs and rejects custom events. Interactive calculator offer inputs remain local to the browser. The optional comparison API intentionally receives offer parameters and must not load analytics.
+- Vercel Web Analytics records page views on the public domains only. The analytics hook removes query strings and URL fragments (including `#c=`) before sending page URLs and rejects custom events. Offer inputs remain local to the browser.
 
 ## Scope and evidence
 

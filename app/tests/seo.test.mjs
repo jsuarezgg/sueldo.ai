@@ -69,9 +69,7 @@ test("sitemap dates reflect each page's last material change", async () => {
     ["https://sueldo.ai/acerca", "2026-08-30"],
     ["https://sueldo.ai/privacidad", "2026-09-18"],
     ["https://sueldo.ai/terminos", "2026-08-30"],
-    ["https://sueldo.ai/uso.md", "2026-09-18"],
-    ["https://sueldo.ai/ai.md", "2026-09-19"],
-    ["https://sueldo.ai/ai", "2026-09-19"],
+    ["https://sueldo.ai/uso.md", "2026-08-30"],
   ]);
 });
 
@@ -102,7 +100,7 @@ test("Vercel serves real files and a real 404 instead of rewriting every URL to 
 
   assert.equal(config.cleanUrls, true);
   assert.equal(config.trailingSlash, false);
-  assert.deepEqual(config.rewrites, [{ source: "/compare", destination: "/api/compare?format=html" }]);
+  assert.equal("rewrites" in config, false);
   assert.match(notFound, /<meta name="robots" content="noindex,follow" \/>/);
   assert.match(notFound, /Esta página no existe/);
 });
