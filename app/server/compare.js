@@ -39,7 +39,7 @@ function reply(body, status, html = false, extraHeaders = {}) {
 
 // This adapter only normalizes and validates inputs. All compensation arithmetic stays in the shared engine.
 export async function compareRequest(urlString, method = "GET", fetchImpl = fetch) {
-  const meta = { api_version: 1, tax_year: TAX_YEAR, methodology_version: METHODOLOGY_VERSION, documentation_url: "https://sueldo.ai/chatgpt" };
+  const meta = { api_version: 1, tax_year: TAX_YEAR, methodology_version: METHODOLOGY_VERSION, documentation_url: "https://sueldo.ai/ai" };
   if (method !== "GET") return reply({ ...meta, status: "invalid_input", errors: [{ field: "method", reason: "Use GET." }] }, 405, false, { Allow: "GET" });
   if (new TextEncoder().encode(urlString).length > MAX_URL_BYTES) {
     return reply({ ...meta, status: "invalid_input", errors: [{ field: "url", reason: "URL exceeds 8000 bytes. Use fewer components or the interactive calculator." }] }, 414);

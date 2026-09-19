@@ -1,17 +1,17 @@
-# Comparar ofertas con sueldo.ai desde ChatGPT
+# Comparar ofertas con sueldo.ai desde un asistente de IA
 
-- Guía HTML para lectores web: https://sueldo.ai/chatgpt
-- Guía Markdown: https://sueldo.ai/chatgpt.md
+- Guía HTML para lectores web: https://sueldo.ai/ai
+- Guía Markdown: https://sueldo.ai/ai.md
 - Cálculo como página HTML: https://sueldo.ai/compare
 - Endpoint público: https://sueldo.ai/api/compare
 - Contrato: `v=1`. Metodología: `2026.1`. Año fiscal base: 2026.
 - Actualización: 18 de septiembre de 2026.
 
-No necesitas instalar una app, conectar una cuenta ni configurar un plugin. El asistente lee los PDFs y extrae los términos; sueldo.ai calcula usando el mismo motor que la calculadora. La conversación necesita acceso web. Que un asistente pueda abrir páginas no garantiza que pueda recuperar todas las URLs generadas: esta integración es un experimento, no una función nativa de ChatGPT.
+No necesitas instalar una app, conectar una cuenta ni configurar un plugin. El asistente lee los PDFs y extrae los términos; sueldo.ai calcula usando el mismo motor que la calculadora. El contrato es independiente del proveedor: puede usarlo ChatGPT, Claude, Gemini u otro asistente que pueda leer archivos y recuperar URLs públicas. La conversación necesita esas capacidades; no se garantiza que estén disponibles en todos los productos o modos. Que un asistente pueda abrir páginas no garantiza que pueda recuperar todas las URLs generadas: esta integración es un experimento, no una integración nativa de un proveedor de IA.
 
 ## Texto para copiar después de adjuntar dos ofertas
 
-> Compara estos dos PDFs usando sueldo.ai. Primero lee https://sueldo.ai/chatgpt. Extrae únicamente los números y opciones necesarios; no envíes nombres, correos, RFC ni texto de los documentos. Entiendo que los parámetros enviados en una URL pueden quedar en historiales y registros. Confirma conmigo la elegibilidad de RESICO si aplica y pregunta por información esencial que falte. Consulta el endpoint público y explica sus resultados, supuestos y advertencias sin sustituir sus cálculos. Incluye el enlace interactivo devuelto. Si no puedes recuperar la URL, dilo y dame el enlace para abrirlo.
+> Compara estos dos PDFs usando sueldo.ai. Primero lee https://sueldo.ai/ai. Extrae únicamente los números y opciones necesarios; no envíes nombres, correos, RFC ni texto de los documentos. Entiendo que los parámetros enviados en una URL pueden quedar en historiales y registros. Confirma conmigo la elegibilidad de RESICO si aplica y pregunta por información esencial que falte. Consulta el endpoint público y explica sus resultados, supuestos y advertencias sin sustituir sus cálculos. Incluye el enlace interactivo devuelto. Si no puedes recuperar la URL, dilo y dame el enlace para abrirlo.
 
 ## Flujo para el asistente
 
