@@ -3,7 +3,7 @@
 - URL canónica: https://sueldo.ai/uso.md
 - Aplicación: https://sueldo.ai/
 - Idioma: español de México
-- Última actualización: 30 de agosto de 2026
+- Última actualización: 18 de septiembre de 2026
 
 sueldo.ai es una calculadora gratuita y sin registro para comparar cualquier par de ofertas de trabajo en México. Cada oferta puede ser de nómina o contractor, estar en MXN o USD e incluir bonos, prestaciones, equity, reembolsos y tiempo libre. La herramienta mantiene separados el efectivo disponible, los impuestos y costos, las prestaciones, la protección, los reembolsos y la compensación contingente.
 
@@ -17,6 +17,10 @@ sueldo.ai es una calculadora gratuita y sin registro para comparar cualquier par
 6. Compara el promedio mensual neto y el valor económico total a 12 meses o tres años.
 7. Abre los desgloses y las fuentes antes de tomar una decisión.
 8. Si quieres compartir el resultado, genera el enlace. La URL restaura ambas ofertas, todos los números y supuestos, y el horizonte elegido. Cualquier persona con el enlace puede ver la comparación.
+
+## Usar desde ChatGPT
+
+Puedes adjuntar dos PDFs a una conversación con acceso web y pedir: “Compara estas ofertas usando sueldo.ai; lee primero https://sueldo.ai/chatgpt.md”. No requiere instalar una app ni vincular una cuenta. El asistente extrae parámetros y consulta el mismo motor mediante una URL pública. La recuperación depende de las capacidades de la conversación y no está garantizada. Esta vía envía parámetros al servidor: revisa la sección de privacidad antes de usarla.
 
 ## Datos que acepta
 
@@ -62,7 +66,9 @@ La guía de nómina y contractor es un caso de uso específico. La calculadora t
 
 ## Privacidad
 
-Los datos de las ofertas se procesan en el navegador. La versión publicada no crea cuentas, no guarda una comparación en una base de datos y no instala cookies de analítica. El navegador sí solicita a `/api/fx` el tipo de cambio Banxico FIX; esa petición no contiene los datos de las ofertas. Al compartir, la comparación completa se codifica en el fragmento `#c=` del enlace: el navegador no envía ese fragmento en la solicitud HTTP, pero cualquiera con la URL puede decodificar y ver los datos. La tarjeta y el PNG se generan localmente y ocultan nombres y montos por defecto.
+En la calculadora interactiva, los datos de las ofertas se procesan en el navegador. El cálculo opcional por `GET /api/compare` envía los parámetros de las ofertas al servidor. Ninguna vía requiere una cuenta, guarda comparaciones en una base de datos ni instala cookies de analítica. Los parámetros de una URL de cálculo pueden quedar en historiales, conversaciones y registros de infraestructura: usa únicamente valores numéricos y opciones, sin nombres ni texto de documentos. Las instrucciones de no guardar en caché o indexar no eliminan ese riesgo. El navegador sí solicita a `/api/fx` el tipo de cambio Banxico FIX; esa petición no contiene los datos de las ofertas. Al compartir, la comparación completa se codifica en el fragmento `#c=` del enlace: el navegador no envía ese fragmento en la solicitud HTTP, pero cualquiera con la URL puede decodificar y ver los datos. La tarjeta y el PNG se generan localmente y ocultan nombres y montos por defecto.
+
+El sitio usa Vercel Web Analytics sin cookies para estadísticas de visitas; elimina parámetros y fragmentos antes de enviar las URLs de página. La respuesta de cálculo no carga analítica.
 
 Más información: https://sueldo.ai/privacidad
 

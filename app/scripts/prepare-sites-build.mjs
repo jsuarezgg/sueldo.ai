@@ -16,6 +16,10 @@ for (const file of [index, worker, banxico, hosting]) {
 
 mkdirSync(path.join(dist, "server"), { recursive: true });
 mkdirSync(path.join(dist, ".openai"), { recursive: true });
+mkdirSync(path.join(dist, "src"), { recursive: true });
+for (const file of ["server/compare.js", "src/compensation.js", "src/share-link.js"]) {
+  copyFileSync(path.join(root, file), path.join(dist, file));
+}
 copyFileSync(worker, path.join(dist, "server", "index.js"));
 copyFileSync(banxico, path.join(dist, "server", "banxico-fix.js"));
 copyFileSync(hosting, path.join(dist, ".openai", "hosting.json"));
