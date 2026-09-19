@@ -4,6 +4,7 @@ import { compareRequest, MAX_URL_BYTES } from "../server/compare.js";
 import { calculateComparison } from "../src/compensation.js";
 import { readSharedComparison } from "../src/share-link.js";
 import handler from "../api/compare.js";
+import { comparisonResponse } from "../server/compare-output.js";
 import worker from "../worker/index.js";
 
 const BASE = "https://sueldo.ai/api/compare";
@@ -100,17 +101,19 @@ test("MXN-only calculations need no upstream and pinned inputs are deterministic
   assert.deepEqual(body, (await calculate(patch)).body);
 });
 
-test("HTML is readable, has no scripts or analytics, and all replies discourage storage/indexing", async () => {
+test("HTML needs no executable scripts or analytics and all replies discourage storage/indexing", async () => {
   for (const value of [url(), url({ format: "html" }), BASE, `${BASE}?email=private`]) {
     const response = await compareRequest(value);
     assert.match(response.headers.get("cache-control"), /no-store/);
     assert.match(response.headers.get("x-robots-tag"), /noindex/);
     assert.equal(response.headers.get("referrer-policy"), "no-referrer");
-    assert.doesNotMatch(await response.text(), /<script|analytics\.js/);
+    const text = await response.text();
+    assert.doesNotMatch(text, /analytics\.js|<script[^>]+src=/);
+    for (const script of text.matchAll(/<script([^>]*)>/g)) assert.match(script[1], /type="application\/json"/);
   }
   const html = await compareRequest(url({ format: "html" }));
   const text = await html.text();
-  assert.match(text, /<pre>/);
+  assert.match(text, /<pre id="sueldo-result-text">/);
   assert.match(text, /&quot;status&quot;: &quot;ok&quot;/);
   assert.match(text, /Abrir comparación interactiva/);
 });
@@ -140,4 +143,85 @@ test("the public webpage alias returns the same HTML calculation without broad r
   assert.equal(site.headers.get("content-type"), "text/html; charset=utf-8");
   const direct = await compareRequest(`${url()}&format=html`);
   assert.equal(await site.text(), await direct.text());
+});
+
+function embeddedResult(html) {
+  const match = html.match(/<script id="sueldo-result" type="application\/json">([\s\S]*?)<\/script>/);
+  assert.ok(match, "initial HTML must include a named JSON data block");
+  return JSON.parse(match[1]);
+}
+
+test("initial HTML contains complete API results and faithful summaries without JS", async () => {
+  for (const horizon of ["1", "3"]) {
+    const requestUrl = url({ horizon, "a.rsu": rsu, "a.monthly_vouchers": 2000, "a.savings_fund_included": true });
+    const api = await (await compareRequest(requestUrl)).json();
+    const web = await worker.fetch(new Request(requestUrl.replace("/api/compare", "/compare")), {});
+    const html = await web.text();
+    const body = embeddedResult(html);
+    assert.deepEqual(body, api);
+    const visible = html.match(/<pre id="sueldo-result-text">([\s\S]*?)<\/pre>/)[1];
+    const decoded = visible.replaceAll("&quot;", '"').replaceAll("&gt;", ">").replaceAll("&lt;", "<").replaceAll("&amp;", "&");
+    assert.deepEqual(JSON.parse(decoded), body, "web readers that strip script elements retain the same complete JSON");
+    assert.match(html, /Efectivo neto del periodo/);
+    assert.match(web.headers.get("content-security-policy"), /default-src 'none'/);
+    for (const key of ["offer_a", "offer_b"]) {
+      const summary = body.summary[key];
+      const raw = body[key];
+      assert.equal(summary.net_cash, raw.regularCash);
+      assert.equal(summary.economic_value, raw.economicValue);
+      assert.equal(summary.contingent_value, raw.equityNet);
+      assert.equal(summary.taxes.total, raw.totalTaxes);
+      assert.equal(summary.benefits.vouchers, raw.vouchers);
+      assert.equal(summary.benefits.employer_savings_fund, raw.employerSavingsFund);
+      assert.deepEqual(summary.benefits.employer_contributions, raw.employerContributions);
+      assert.ok(summary.inputs.monthlyPay > 0);
+    }
+    assert.equal(body.summary.contingent_value_basis, "modeled_vested_equity_net_only");
+    assert.equal(body.comparison.contingent_value_difference, body.offer_b.equityNet - body.offer_a.equityNet);
+    const shared = readSharedComparison(body.view_url);
+    const frontend = JSON.parse(JSON.stringify(calculateComparison(shared.offers, shared.assumptions, shared.horizon)));
+    assert.deepEqual(frontend.employee, body.offer_a);
+    assert.deepEqual(frontend.contractor, body.offer_b);
+  }
+});
+
+test("JSON data and visible text cannot execute markup or terminate the JSON element", async () => {
+  const warning = '</script><script>alert("test")</script>&<img src=x onerror=alert(1)>';
+  const body = { status: "needs_input", methodology_version: "2026.1", tax_year: 2026, warnings: [warning], missing_fields: [] };
+  const html = await comparisonResponse(body, 200, true).text();
+  assert.deepEqual(embeddedResult(html), body);
+  assert.equal([...html.matchAll(/<script/g)].length, 1);
+  assert.equal([...html.matchAll(/<\/script>/g)].length, 1);
+  assert.doesNotMatch(html, /<img/);
+});
+
+test("missing and invalid inputs expose external field paths and directly askable questions", async () => {
+  const cases = [
+    [{ "b.resico_eligible": undefined }, "needs_input", "b.resico_eligible", "boolean"],
+    [{ "a.monthly_pay": null }, "needs_input", "a.monthly_pay", "number"],
+    [{ "a.aguinaldo_days": 2 }, "invalid_input", "a.aguinaldo_days", "number"],
+    [{ "a.components": [{ category: "bonus", amount: 1000, frequency: "annual", currency: "MXN", taxable: null, cash: true }] }, "needs_input", "a.components.0.taxable", "boolean"],
+    [{ "a.rsu": { ...rsu, cadence: 2 } }, "invalid_input", "a.rsu.cadence", "number"],
+  ];
+  for (const [patch, status, field, type] of cases) {
+    const r = await compareRequest(url(patch).replace("/api/compare", "/compare"));
+    const body = embeddedResult(await r.text());
+    assert.equal(body.status, status);
+    const issue = [...(body.missing_fields ?? []), ...(body.errors ?? [])].find((item) => item.field === field);
+    assert.ok(issue, field);
+    assert.equal(issue.expected.type, type);
+    assert.match(issue.question, /¿.+\?/);
+    assert.ok(issue.code);
+    assert.equal(body.summary, undefined);
+  }
+  const overLimit = await calculate({ "b.monthly_pay": 500000 });
+  assert.ok(overLimit.body.errors.some((issue) => issue.code === "unsupported_tax_profile" && /No confirmes RESICO/.test(issue.question)));
+});
+
+test("method and size errors retain structured initial HTML on the web route", async () => {
+  for (const [requestUrl, method, status] of [[url().replace("/api/compare", "/compare"), "POST", 405], [`https://sueldo.ai/compare?${"x".repeat(MAX_URL_BYTES)}`, "GET", 414]]) {
+    const r = await compareRequest(requestUrl, method);
+    assert.equal(r.status, status);
+    assert.equal(embeddedResult(await r.text()).status, "invalid_input");
+  }
 });
