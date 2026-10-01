@@ -22,7 +22,7 @@
   </url>
   <url>
     <loc>https://sueldo.ai/privacidad</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-10-01</lastmod>
   </url>
   <url>
     <loc>https://sueldo.ai/terminos</loc>
@@ -30,6 +30,10 @@
   </url>
   <url>
     <loc>https://sueldo.ai/uso.md</loc>
-    <lastmod>2026-08-30</lastmod>
+    <lastmod>2026-10-01</lastmod>
+  </url>
+  <url>
+    <loc>https://sueldo.ai/mcp.md</loc>
+    <lastmod>2026-10-01</lastmod>
   </url>
 </urlset>

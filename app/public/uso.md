@@ -3,7 +3,7 @@
 - URL canónica: https://sueldo.ai/uso.md
 - Aplicación: https://sueldo.ai/
 - Idioma: español de México
-- Última actualización: 30 de agosto de 2026
+- Última actualización: 1 de octubre de 2026
 
 sueldo.ai es una calculadora gratuita y sin registro para comparar cualquier par de ofertas de trabajo en México. Cada oferta puede ser de nómina o contractor, estar en MXN o USD e incluir bonos, prestaciones, equity, reembolsos y tiempo libre. La herramienta mantiene separados el efectivo disponible, los impuestos y costos, las prestaciones, la protección, los reembolsos y la compensación contingente.
 
@@ -29,7 +29,13 @@ sueldo.ai es una calculadora gratuita y sin registro para comparar cualquier par
 - Vacaciones pagadas o días sin facturar.
 - RSUs: valor del grant, moneda, duración, cliff, cadencia, distribución por año y costo estimado de venta.
 
-Los nombres de empresa o cliente son etiquetas locales para distinguir las ofertas. No hacen que el cálculo cambie.
+Los nombres de empresa o cliente son etiquetas para distinguir las ofertas. No hacen que el cálculo cambie. En la calculadora web permanecen locales; para MCP conviene usar “Oferta A” y “Oferta B”.
+
+## Uso desde un asistente
+
+Un cliente compatible puede conectar `https://sueldo.ai/api/mcp` mediante MCP Streamable HTTP y llamar a `compare_offers`. Recibe los mismos cálculos, los supuestos utilizados y un enlace para abrir y editar la comparación. No necesita cuenta ni clave de API. El cliente debe preguntar por datos faltantes y confirmar RESICO con la persona. La conexión de herramientas es necesaria: encontrar esta guía con un buscador no concede acceso automático al endpoint.
+
+Esquema, unidades y ejemplo: https://sueldo.ai/mcp.md
 
 ## Cómo interpretar el resultado
 
@@ -62,7 +68,9 @@ La guía de nómina y contractor es un caso de uso específico. La calculadora t
 
 ## Privacidad
 
-Los datos de las ofertas se procesan en el navegador. La versión publicada no crea cuentas, no guarda una comparación en una base de datos y no instala cookies de analítica. El navegador sí solicita a `/api/fx` el tipo de cambio Banxico FIX; esa petición no contiene los datos de las ofertas. Al compartir, la comparación completa se codifica en el fragmento `#c=` del enlace: el navegador no envía ese fragmento en la solicitud HTTP, pero cualquiera con la URL puede decodificar y ver los datos. La tarjeta y el PNG se generan localmente y ocultan nombres y montos por defecto.
+La calculadora web procesa los datos de las ofertas en el navegador. Si eliges usar MCP, el cliente envía los números al servidor en el cuerpo de una petición POST para ejecutar el mismo cálculo. No creamos cuentas, no guardamos comparaciones en una base de datos y no registramos datos de ofertas, resultados o enlaces en logs de la aplicación. Las respuestas MCP no se almacenan en caché. El cliente de IA y el alojamiento tienen sus propias políticas; no podemos prometer retención cero por parte de esos proveedores.
+
+El navegador solicita a `/api/fx` el tipo de cambio Banxico FIX; esa petición no contiene datos de ofertas. Al compartir, la comparación completa se codifica en el fragmento `#c=` del enlace: el navegador no envía ese fragmento en la solicitud HTTP, pero cualquiera con la URL puede decodificar y ver los datos. En MCP, el enlace también queda visible para el asistente y puede permanecer en su historial. La tarjeta y el PNG se generan localmente y ocultan nombres y montos por defecto.
 
 Más información: https://sueldo.ai/privacidad
 

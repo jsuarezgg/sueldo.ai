@@ -8,6 +8,7 @@ Idioma principal: español de México.
 
 - [Guía completa en Markdown](https://sueldo.ai/uso.md): uso, interpretación, alcance, límites, privacidad y fuentes.
 - [Calculadora](https://sueldo.ai/): flujo interactivo de comparación.
+- [Herramienta MCP](https://sueldo.ai/mcp.md): conexión por Streamable HTTP, esquema de `compare_offers`, unidades, privacidad y ejemplo. Requiere un cliente con MCP conectado; leer una página no habilita llamadas a herramientas.
 - [Metodología y fuentes](https://sueldo.ai/metodologia): reglas y supuestos que usa el cálculo.
 - [Cómo comparar nómina y contractor](https://sueldo.ai/comparar-nomina-contractor-mexico): marco de decisión y conceptos que no deben mezclarse.
 

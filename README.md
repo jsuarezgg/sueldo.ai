@@ -40,8 +40,9 @@ On a loaded Mac, inspect `memory_pressure`, `vm_stat`, and `sysctl vm.swapusage`
 | `app/src/OfferComparison.jsx`, `app/src/VestingChart.jsx` | Comparison and vesting presentation |
 | `app/src/share-link.js`, `app/src/share-summary.js` | Versioned URL state and optional share-card export |
 | `app/server/banxico-fix.js` | Shared Banxico FIX fetch/parser |
+| `app/server/compare-offers.js`, `app/server/mcp.js` | Bounded MCP inputs, shared-engine calculation and stateless protocol handler |
 | `app/src/fx-reference.js` | Bounded, validated browser FX request |
-| `app/api/fx.js`, `app/worker/index.js` | Vercel API and Sites worker adapters |
+| `app/api/fx.js`, `app/api/mcp.js`, `app/worker/index.js` | Vercel API and Sites worker adapters |
 | `app/public/` | Crawlable information pages and discovery assets |
 
 [`DOMAIN_CONTEXT.md`](./DOMAIN_CONTEXT.md) records market, calculation, and privacy boundaries. [`COMPENSATION_CASES.md`](./COMPENSATION_CASES.md) is the broader case catalog, including planned features and open questions. [`AGENTS.md`](./AGENTS.md) records the repository workflow for coding agents.
@@ -54,6 +55,7 @@ Run focused tests while iterating, from `app/`:
 node --test tests/compensation.test.mjs
 node --test tests/capture-state.test.mjs tests/share-link.test.mjs tests/share-summary.test.mjs
 node --test tests/banxico-fix.test.mjs tests/fx-reference.test.mjs tests/seo.test.mjs
+node --test tests/mcp.test.mjs
 ```
 
 Before releasing code, run the complete source test suite, build, then check the generated hosting package. These checks run sequentially and do not require a local app server. `npm test` and `npm run test:sites` are build-independent; `npm run test:build` checks the emitted files in `dist/`.
@@ -65,9 +67,28 @@ npm run build
 npm run test:build
 ```
 
-`npm run build` emits browser assets in `app/dist/client/` and packages the Sites worker in `app/dist/server/`. Vercel serves `dist/client` with the API function in `app/api/fx.js`; Sites uses the worker and `app/.openai/hosting.json`. Keep shared FX behavior consistent across both adapters. `npm run preview` serves the built frontend but does not run Vercel functions or the Sites worker; the development FX middleware only runs with `npm run dev`.
+`npm run build` emits browser assets in `app/dist/client/` and bundles the Sites worker and its dependencies in `app/dist/server/`. Vercel serves `dist/client` with the functions in `app/api/`; Sites uses the worker and `app/.openai/hosting.json`. Keep shared FX and MCP behavior consistent across both adapters. `npm run preview` serves the built frontend but does not run the APIs; the development FX and MCP middleware run with `npm run dev`.
 
 For an authorized production release, match the ready deployment to the merged commit, then exercise the affected flow at `https://sueldo.ai` with synthetic offer values. Verify `/api/fx` for FX changes and raw HTTP status codes for route changes. Record the exact commit and observed behavior; a build or merge alone is not live verification.
+
+## MCP comparison tool
+
+The endpoint is `/api/mcp`, using the official MCP SDK's stateless Streamable HTTP handler. It exposes one read-only tool, `compare_offers`, backed by the exact browser calculation engine and share-link encoder. No AI model, API key, account, database, saved session, or separate server is required. Vercel runs it as a Node.js function in the existing project; invocation and compute charges still depend on the hosting plan and traffic.
+
+The [client guide](./app/public/mcp.md), published as `/mcp.md` and linked from `/llms.txt`, documents inputs, output interpretation, privacy and a synthetic example. A client must connect the remote MCP URL before calling it; web discovery alone does not install tools. This implementation does not submit a ChatGPT directory listing or configure any user's assistant.
+
+- Local development: `npm run dev`, then connect an MCP client to `http://localhost:5173/api/mcp` (or the port Vite prints).
+- Vercel: production hostnames and the exact `VERCEL_URL` preview hostname are allowed. The function uses Web Standard `Request`/`Response`, with a 10-second duration ceiling. The project uses Node 24.
+- Sites: the bundled worker has no storage bindings. Set `MCP_HOSTNAME` to the exact additional hostname if the deployment is not served at `sueldo.ai` or `www.sueldo.ai`. This is a hostname, not a URL or wildcard.
+- The endpoint allows requests without Origin (ordinary server-to-server clients), and validates Host and any supplied Origin. Browser cross-origin access is not enabled. POST only; no persistent SSE stream, sessions, subscription streams or OAuth.
+- Inputs are explicit and bounded; requests are limited to 64 KiB. The engine blocks unconfirmed/ineligible RESICO, excess income and invalid benefits/vesting. Generated links must fit the existing share format. The tool rejects combinations whose charges the current editor cannot expose.
+- Results and share URLs exist in memory for the response only. Never log request bodies, tool arguments, outputs or full shared URLs; keep tracing/body capture disabled for this route. `no-store` covers successes and failures. Clients and hosting providers have their own retention policies.
+
+Before an authorized public release, verify the deployed MCP handshake, discovery, valid and invalid tool calls with synthetic data, then open and edit the returned link in a real client/browser. Check that the deployment matches the merged commit. The SDK tests verify protocol behavior, arithmetic parity and link restoration; they do not establish a ChatGPT or another assistant's end-to-end experience.
+
+The code bounds each invocation, not total traffic. Configure hosting-layer rate limits and spending controls before promoting the public endpoint; do not use an in-memory IP map as a global serverless limit. Do not enable request-body or result logging. No paid service or limit is configured by this code change.
+
+To exercise the bundled worker with dynamic code generation disabled, run `node --disallow-code-generation-from-strings --test tests/build.mjs` after building. This catches a class of Worker-incompatible dependencies; a deployed Sites smoke test remains separate.
 
 ## Web Analytics
 

@@ -1,6 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { BANXICO_CACHE_CONTROL, fetchBanxicoFix } from "./server/banxico-fix.js";
+import { toNodeHandler } from "@modelcontextprotocol/node";
+import { createMcpEndpoint, MCP_MAX_BODY_BYTES } from "./server/mcp.js";
 
 const CLEAN_STATIC_ROUTES = new Set([
   "/acerca",
@@ -62,6 +64,19 @@ const banxicoDevApi = {
   },
 };
 
+const mcpDevApi = {
+  name: "mcp-dev-api",
+  configureServer(server) {
+    const handle = toNodeHandler({ fetch: createMcpEndpoint({
+      allowedHosts: ["localhost", "127.0.0.1", "[::1]", "terminal.local"],
+    }) }, { maxRequestBodySize: MCP_MAX_BODY_BYTES, onerror: () => {} });
+    server.middlewares.use((request, response, next) => {
+      if (request.url?.split("?", 1)[0] !== "/api/mcp") return next();
+      void handle(request, response);
+    });
+  },
+};
+
 export default defineConfig({
   build: {
     outDir: "dist/client",
@@ -76,5 +91,5 @@ export default defineConfig({
       clientFiles: ["./src/main.jsx"],
     },
   },
-  plugins: [cleanStaticRoutes, banxicoDevApi, react()],
+  plugins: [cleanStaticRoutes, banxicoDevApi, mcpDevApi, react()],
 });

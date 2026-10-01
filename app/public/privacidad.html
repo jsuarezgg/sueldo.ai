@@ -17,7 +17,7 @@
     <meta property="og:locale" content="es_MX" />
     <meta property="og:site_name" content="sueldo.ai" />
     <meta property="og:title" content="Privacidad en sueldo.ai" />
-    <meta property="og:description" content="Los datos de las ofertas se calculan en el navegador y no se guardan en una cuenta o base de datos." />
+    <meta property="og:description" content="Cómo se procesan las ofertas en la calculadora web y la herramienta MCP, sin cuentas ni base de datos de comparaciones." />
     <meta property="og:url" content="https://sueldo.ai/privacidad" />
     <meta property="og:image" content="https://sueldo.ai/og-image.png" />
   </head>
@@ -35,22 +35,37 @@
         <header class="article-header">
           <h1>Privacidad</h1>
           <p class="lede">
-            La versión actual de sueldo.ai procesa los datos de las ofertas en el navegador. No crea cuentas ni
-            guarda una comparación en una base de datos.
+            La calculadora web procesa las ofertas en el navegador. La herramienta MCP opcional las procesa en
+            el servidor durante cada solicitud. No creamos cuentas ni guardamos comparaciones en una base de datos.
           </p>
-          <p class="article-meta">Última actualización: 18 de septiembre de 2026</p>
+          <p class="article-meta">Última actualización: 1 de octubre de 2026</p>
         </header>
 
         <section class="article-section">
           <h2>Datos que capturas</h2>
           <p>
             Pagos, nombres de referencia, prestaciones, costos, supuestos y RSUs viven en la memoria de la pestaña
-            durante la captura. No se envían al servidor de sueldo.ai. Al compartir, esos datos se codifican en el
+            durante la captura en la calculadora web. Ese flujo no los envía al servidor de sueldo.ai. Al compartir, se codifican en el
             fragmento del enlace para que la persona que lo abra pueda restaurar la comparación.
           </p>
           <p>
             Evita introducir información que no necesitas para comparar. Puedes usar etiquetas genéricas como
             “Oferta A” y “Oferta B”; el nombre de una empresa o cliente no modifica el cálculo.
+          </p>
+        </section>
+
+        <section class="article-section">
+          <h2>Comparaciones desde un asistente</h2>
+          <p>
+            Si conectas un asistente a nuestra herramienta MCP, su cliente envía los datos de ambas ofertas en el
+            cuerpo de una petición a <code>/api/mcp</code>. El servidor calcula en memoria y devuelve resultados,
+            supuestos y un enlace editable. No guarda sesiones o comparaciones, no llama a modelos de IA y no registra
+            datos de ofertas, resultados o enlaces en logs de la aplicación. Las respuestas llevan una instrucción de no almacenar en caché.
+          </p>
+          <p>
+            El asistente recibe los números y el enlace completo, que puede permanecer en el historial de conversación.
+            El cliente de IA y el proveedor de alojamiento tienen sus propias políticas; esta herramienta no controla
+            su retención. Envía sólo los datos necesarios, usa etiquetas genéricas y evita documentos o identificadores personales.
           </p>
         </section>
 
@@ -119,7 +134,7 @@
 
     <footer class="site-footer">
       <div class="content-shell site-footer-inner">
-        <span>sueldo.ai · Comparaciones locales a la sesión</span>
+        <span>sueldo.ai · Sin cuentas ni comparaciones guardadas</span>
         <nav aria-label="Enlaces legales"><a href="/acerca">Acerca</a><a href="/terminos">Términos</a></nav>
       </div>
     </footer>
