@@ -16,7 +16,9 @@ Either offer can be payroll or independent contractor, paid in MXN or USD. The c
 
 The calculation is an editable comparison, not tax, accounting, legal, or investment advice.
 
-## Run locally
+## Run locally (authorized development only)
+
+These instructions are for the copyright holder and developers with separate written permission. They do not grant permission to reuse or self-host the software.
 
 The runnable package is a React/Vite application in `app/`. It uses Node's built-in test runner. Install the lockfile versions on a fresh checkout:
 
@@ -93,6 +95,8 @@ The same sitemap can be submitted to Bing Webmaster Tools. `robots.txt` permits 
 
 Copyright (C) 2026 jsuarezgg.
 
-sueldo.ai is free software licensed under the [GNU Affero General Public License, version 3 only](./LICENSE) (`AGPL-3.0-only`). You may use, modify, and redistribute it under those terms. Modified versions made available over a network must offer their users the corresponding source code as required by the license.
+sueldo.ai is proprietary software. All rights reserved. The [license](./LICENSE) permits viewing the source and using the official hosted service, including sharing your comparison results. It grants no permission to reuse, modify, redistribute, or self-host the software without separate written permission, subject to the exceptions stated in the license. Public repository access is not an open-source license.
+
+Previously granted rights to code released under AGPL-3.0-only remain valid under that license; this change does not revoke them.
 
 The software is provided without warranty. Third-party dependencies retain their own licenses. The bundled Archivo font is licensed separately under the [SIL Open Font License 1.1](./app/public/fonts/LICENSE-Archivo.txt).
