@@ -5,9 +5,12 @@
   "outputDirectory": "dist/client",
   "cleanUrls": true,
   "trailingSlash": false,
+  "functions": {
+    "api/mcp.js": { "maxDuration": 10 }
+  },
   "headers": [
     {
-      "source": "/uso.md",
+      "source": "/(uso|mcp).md",
       "headers": [
         {
           "key": "Content-Type",

@@ -1,8 +1,15 @@
 import { BANXICO_CACHE_CONTROL, fetchBanxicoFix } from "../server/banxico-fix.js";
+import { createMcpEndpoint, MCP_HOSTS } from "../server/mcp.js";
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    if (url.pathname === "/api/mcp") {
+      return createMcpEndpoint({
+        allowedHosts: [...MCP_HOSTS, env.MCP_HOSTNAME].filter(Boolean),
+      })(request);
+    }
 
     if (url.pathname === "/api/fx") {
       if (request.method !== "GET") {

@@ -26,11 +26,12 @@ This document records product-market and calculation context only. It intentiona
 
 ## Data and privacy behavior
 
-- Comparisons are processed in the browser; the published product does not require an account or store a comparison in a database.
+- The web calculator processes comparisons in the browser. The optional `/api/mcp` endpoint receives offer inputs in a POST body and runs the same engine in server memory for that request. Neither requires an account or stores comparisons in a database.
+- MCP has one read-only, deterministic `compare_offers` tool. It does not call AI models, save sessions, or log offer inputs, results, or share URLs. A connected AI client and hosting infrastructure have their own data policies; this is not a promise about their retention. Do not send identifying documents or put compensation in query strings.
 - A shared comparison is a versioned, self-contained URL fragment containing both offers, editable assumptions, selected horizon, and result state. The fragment is not sent in the HTTP request, but anyone with the full URL can decode and view it.
 - Generated share summaries are anonymous by default. Identifying names and monetary amounts are included only through an explicit user choice.
 - The `/api/fx` request contains no offer data.
-- Vercel Web Analytics records page views on the public domains only. The analytics hook removes query strings and URL fragments (including `#c=`) before sending page URLs and rejects custom events. Offer inputs remain local to the browser.
+- Vercel Web Analytics records page views on the public domains only. The analytics hook removes query strings and URL fragments (including `#c=`) before sending page URLs and rejects custom events. Offer inputs are not sent to analytics. MCP responses use `Cache-Control: no-store`.
 
 ## Scope and evidence
 
