@@ -56,6 +56,7 @@ node --test tests/compensation.test.mjs
 node --test tests/capture-state.test.mjs tests/share-link.test.mjs tests/share-summary.test.mjs
 node --test tests/banxico-fix.test.mjs tests/fx-reference.test.mjs tests/seo.test.mjs
 node --test tests/mcp.test.mjs
+node --test tests/editor.test.mjs
 ```
 
 Before releasing code, run the complete source test suite, build, then check the generated hosting package. These checks run sequentially and do not require a local app server. `npm test` and `npm run test:sites` are build-independent; `npm run test:build` checks the emitted files in `dist/`.

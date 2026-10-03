@@ -4,13 +4,17 @@
 - Transporte: MCP Streamable HTTP, POST; sin autenticación ni sesiones.
 - Herramienta: `compare_offers`.
 - Idioma de producto: español de México.
-- Última actualización: 1 de octubre de 2026.
+- Última actualización: 3 de octubre de 2026.
 
 Conecta esta URL desde un cliente que permita servidores MCP remotos. No requiere un componente visual, una skill o un modelo específico. Un buscador que sólo puede leer páginas no puede llamar la herramienta automáticamente: el cliente necesita una conexión MCP o soporte HTTP adecuado.
 
 El servidor publica el esquema completo mediante `tools/list`. Usa el ciclo de conexión de tu cliente MCP; soporta el protocolo actual del SDK y clientes Streamable HTTP de 2025. GET y DELETE devuelven 405 porque no hay stream permanente ni sesiones. Las respuestas son JSON o eventos SSE finitos según la versión del protocolo. No se admite el transporte SSE antiguo con un endpoint separado.
 
 ## Antes de calcular
+
+Haz la captura por etapas: responde brevemente con lo que ya se entiende y haz como máximo tres preguntas concretas por turno, sin esconder un cuestionario en subpreguntas. No vuelvas a preguntar por datos que la persona ya proporcionó. Primero resuelve lo que pueda bloquear el alcance o cambiar la interpretación del sueldo; después completa prestaciones, costos y supuestos. Avanzar por etapas no autoriza calcular con campos pendientes ni rellenarlos con ceros.
+
+Si el sueldo aparece sólo con `$`, confirma si es MXN o USD. Si sólo hay una oferta, explica que `compare_offers` necesita dos escenarios; no inventes la segunda ni presentes un neto como si ya se hubiera calculado.
 
 1. Confirma que la comparación corresponde a una persona residente fiscal en México y que los pagos son brutos mensuales.
 2. Recoge las dos ofertas, sus monedas, prestaciones, costos, tiempo libre y compensación adicional. Pregunta por lo que falte. No uses los números del ejemplo ni asumas cero automáticamente.

@@ -145,17 +145,10 @@ const FREQUENCY_OPTIONS = Object.entries(frequencyLabels).map(([value, label]) =
   label,
 }));
 
-const DURATION_OPTIONS = [3, 4, 5].map((value) => ({
-  value,
-  label: `${value} años`,
+const DURATION_OPTIONS = Array.from({ length: 12 }, (_, index) => ({
+  value: index + 1,
+  label: index === 0 ? "1 año" : `${index + 1} años`,
 }));
-
-const CLIFF_OPTIONS = [
-  { value: 0, label: "Sin cliff" },
-  { value: 6, label: "6 meses" },
-  { value: 12, label: "12 meses" },
-  { value: 24, label: "24 meses" },
-];
 
 const CADENCE_OPTIONS = [
   { value: 1, label: "Mensual" },
@@ -343,7 +336,7 @@ function MoneyInput({
   );
 }
 
-function QuantityInput({ label, value, onChange, suffix }) {
+function QuantityInput({ label, value, onChange, suffix, max }) {
   return (
     <label className="field money-field">
       <span>{label}</span>
@@ -352,6 +345,7 @@ function QuantityInput({ label, value, onChange, suffix }) {
           value={value}
           type="number"
           min="0"
+          max={max}
           step="1"
           inputMode="numeric"
           onChange={(event) => onChange(numericInputValue(event))}
@@ -362,12 +356,13 @@ function QuantityInput({ label, value, onChange, suffix }) {
   );
 }
 
-function PercentInput({ label, value, onChange }) {
+function PercentInput({ label, ariaLabel, value, onChange }) {
   return (
     <label className="field percent-field">
       <span>{label}</span>
       <div className="input-shell">
         <input
+          aria-label={ariaLabel}
           value={value}
           type="number"
           min="0"
@@ -664,7 +659,7 @@ function OfferBaseEditor({
   );
 }
 
-function ComponentRow({ component, onChange, onRemove }) {
+export function ComponentRow({ component, onChange, onRemove }) {
   return (
     <div className="component-row">
       <input
@@ -705,6 +700,23 @@ function ComponentRow({ component, onChange, onRemove }) {
         />
         <span>Gravado</span>
       </label>
+      <div className="component-assumptions">
+        <label className="tax-check">
+          <input
+            type="checkbox"
+            aria-label={`Disponible en efectivo de ${component.name}`}
+            checked={component.cash ?? false}
+            onChange={(event) => onChange({ cash: event.target.checked })}
+          />
+          <span>Disponible en efectivo</span>
+        </label>
+        <PercentInput
+          label="Uso previsto"
+          ariaLabel={`Uso previsto de ${component.name}`}
+          value={component.utilization ?? 100}
+          onChange={(utilization) => onChange({ utilization })}
+        />
+      </div>
       <button className="icon-button" onClick={onRemove} aria-label={`Quitar ${component.name}`}>
         <X size={17} weight="bold" />
       </button>
@@ -2085,7 +2097,7 @@ function ResultsView({ offers, assumptions, horizon, setHorizon, onEditOffers, o
   );
 }
 
-function RsuWorkspace({ offer, assumptions, onSave, onCancel }) {
+export function RsuWorkspace({ offer, assumptions, onSave, onCancel }) {
   const [draft, setDraft] = useState(() => structuredClone(offer.rsu ?? defaultRsu));
   const events = useMemo(() => buildVestingEvents(draft), [draft]);
   const total = draft.allocations.reduce((sum, item) => {
@@ -2168,13 +2180,15 @@ function RsuWorkspace({ offer, assumptions, onSave, onCancel }) {
                   options={DURATION_OPTIONS}
                   onChange={changeYears}
                 />
-                <PickerField
+                <QuantityInput
                   label="Cliff"
                   value={draft.cliffMonth}
-                  options={CLIFF_OPTIONS}
+                  suffix="meses"
+                  max={draft.allocations.length * 12}
                   onChange={(cliffMonth) => setDraft({ ...draft, cliffMonth })}
                 />
               </div>
+              <p className="rsu-control-note">Usa 0 si no hay cliff.</p>
               <PickerField
                 label="Frecuencia dentro de cada año"
                 value={draft.cadence}

@@ -602,8 +602,10 @@ export function validateRsu(rsu, fxRate, relationship = "Nómina") {
   if (!SUPPORTED_RSU_CADENCES.has(Number(rsu.cadence))) {
     errors.push(validationError("rsu.cadence", "La frecuencia de vesting no es válida."));
   }
-  if (!isPresentFiniteNumber(rsu.cliffMonth) || Number(rsu.cliffMonth) < 0) {
-    errors.push(validationError("rsu.cliffMonth", "El cliff no puede ser negativo."));
+  if (!isPresentFiniteNumber(rsu.cliffMonth)
+    || !Number.isInteger(Number(rsu.cliffMonth))
+    || Number(rsu.cliffMonth) < 0) {
+    errors.push(validationError("rsu.cliffMonth", "El cliff debe ser un número entero de meses, mayor o igual a 0."));
   }
   const saleFeeRate = rsu.saleFeeRate ?? 0;
   if (!isPresentFiniteNumber(saleFeeRate)

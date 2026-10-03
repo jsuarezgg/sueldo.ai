@@ -1055,7 +1055,8 @@ input {
     "name name remove"
     "amount currency remove"
     "frequency frequency remove"
-    "tax tax remove";
+    "tax tax remove"
+    "assumptions assumptions assumptions";
   gap: 7px 9px;
 }
 
@@ -1075,7 +1076,7 @@ input {
   grid-area: currency;
 }
 
-.offer-compensation-column .tax-check {
+.offer-compensation-column .component-row > .tax-check {
   grid-area: tax;
   padding-left: 2px;
 }
@@ -1083,6 +1084,22 @@ input {
 .offer-compensation-column .component-row > .icon-button {
   grid-area: remove;
   align-self: center;
+}
+
+.offer-compensation-column .component-assumptions {
+  grid-area: assumptions;
+}
+
+.component-assumptions {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(112px, 0.6fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.component-assumptions .field {
+  margin-bottom: 0;
 }
 
 .component-row {
@@ -2744,7 +2761,8 @@ input {
       "amount remove"
       "currency remove"
       "frequency remove"
-      "tax remove";
+      "tax remove"
+      "assumptions assumptions";
   }
 
   .paid-leave-row {
