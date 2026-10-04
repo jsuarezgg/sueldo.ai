@@ -37,7 +37,7 @@ Las claves `offers.employee` y `offers.contractor` identifican Oferta A y Oferta
 | `statutoryBenefits` | Objeto completo para nómina; `null` para contractor. Antigüedad, aguinaldo y vacaciones en años/días; prima vacacional en porcentaje. PTU y seguro patronal son anuales en MXN; vales mensuales en MXN |
 | `components` | Lista de bonos, reembolsos, protección u otros conceptos. Cada monto usa su moneda y frecuencia. `cash` y `taxable` son decisiones distintas; `utilization` es porcentaje. `[]` significa que no se incluyen conceptos |
 | `rsu` | Grant en su moneda, cliff en meses, cadencia en meses (1, 3, 6 o 12), costo de venta porcentual y asignaciones por años consecutivos que sumen 100%. `null` si no se incluyen RSUs; sólo se soportan en nómina |
-| `name`, `location` | Etiquetas opcionales; no cambian las reglas fiscales. Se prefieren etiquetas genéricas y se usan Oferta A/B si no se envía nombre |
+| `name` | Etiqueta opcional; se prefieren Oferta A/B, usadas si no se envía nombre. No envíes ubicación: no modifica el cálculo y el esquema la rechaza |
 | `assumptions.fxRate` | MXN por USD, explícita y mayor que cero. Se requiere incluso si todo está en MXN: no participa en esos cálculos, pero queda disponible si la persona cambia monedas al editar el enlace. No inventar una tasa de relleno |
 | `assumptions.fxDate` | Fecha de referencia proporcionada, YYYY-MM-DD, o `null`. El servidor no verifica su procedencia |
 | `horizon` | `year` (12 meses) o `three-years` (36 meses) |

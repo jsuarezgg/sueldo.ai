@@ -22,9 +22,11 @@ function assertParity(input) {
   const shared = readSharedComparison(output.editUrl);
   assert.ok(shared, "returned link must reopen in the existing editor");
   for (const key of ["employee", "contractor"]) {
-    const { id, components, statutoryBenefits, ...sharedFields } = shared.offers[key];
+    const { id, location, components, statutoryBenefits, ...sharedFields } = shared.offers[key];
     const { components: inputComponents, statutoryBenefits: inputBenefits, ...inputFields } = offers[key];
     assert.equal(id, key);
+    assert.equal(location, "");
+    assert.equal(Object.hasOwn(offers[key], "location"), false);
     assert.deepEqual(sharedFields, inputFields);
     assert.deepEqual(components.map(({ id: _id, ...component }) => component), inputComponents);
     if (inputBenefits !== null) assert.deepEqual(statutoryBenefits, inputBenefits);
@@ -174,6 +176,15 @@ for (const [name, fetch] of [["Vercel", vercel.fetch], ["Sites", (request) => wo
     assert.equal(notification.status, 202);
     const listed = await rpcBody(await fetch(rpcRequest("tools/list")));
     assert.equal(listed.result.tools[0].name, "compare_offers");
+    const offerProperties = listed.result.tools[0].inputSchema.properties.offers.properties;
+    for (const key of ["employee", "contractor"]) {
+      assert.equal(Object.hasOwn(offerProperties[key].properties, "location"), false);
+      const withLocation = exampleInput();
+      withLocation.offers[key].location = "Ciudad de ejemplo";
+      const rejected = await rpcBody(await fetch(rpcRequest("tools/call", { name: "compare_offers", arguments: withLocation })));
+      assert.ok(rejected.error || rejected.result?.isError);
+      assert.equal(rejected.result?.structuredContent?.editUrl, undefined);
+    }
     const called = await fetch(rpcRequest("tools/call", { name: "compare_offers", arguments: exampleInput() }));
     assert.equal(called.headers.get("cache-control"), "no-store");
     assert.equal(called.headers.get("mcp-session-id"), null);
