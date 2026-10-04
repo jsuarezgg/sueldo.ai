@@ -89,6 +89,8 @@ Before an authorized public release, verify the deployed MCP handshake, discover
 
 The code bounds each invocation, not total traffic. Configure hosting-layer rate limits and spending controls before promoting the public endpoint; do not use an in-memory IP map as a global serverless limit. Do not enable request-body or result logging. No paid service or limit is configured by this code change.
 
+The [plugin preparation package](./plugins/README.md) contains a portable remote-MCP manifest, listing assets, synthetic review cases and a reproducible draft ZIP command. It has not been submitted or published. The preparation guide separates automated calculation checks from the native ChatGPT desktop/mobile testing and publisher verification still required before submission.
+
 To exercise the bundled worker with dynamic code generation disabled, run `node --disallow-code-generation-from-strings --test tests/build.mjs` after building. This catches a class of Worker-incompatible dependencies; a deployed Sites smoke test remains separate.
 
 ## Web Analytics

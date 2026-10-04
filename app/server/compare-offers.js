@@ -43,7 +43,6 @@ const rsuSchema = z.strictObject({
 
 const offerSchema = z.strictObject({
   name: z.string().min(1).max(160).optional().describe("Etiqueta opcional. Preferir Oferta A/B; no enviar nombres de personas o empresas."),
-  location: z.string().max(80).optional().describe("Etiqueta informativa; no cambia residencia fiscal ni reglas."),
   relationship: z.enum(["Nómina", "Contratista independiente"]),
   currency,
   monthlyPay: money.positive().describe("Pago bruto mensual en la moneda indicada."),
@@ -123,7 +122,8 @@ export function compareOffers(input) {
     ...offer,
     id: key,
     name: offer.name ?? (index === 0 ? "Oferta A" : "Oferta B"),
-    location: offer.location ?? "",
+    // The editor retains this display field; MCP does not collect location.
+    location: "",
     // Unused for contractor calculations; complete the existing editor's state.
     statutoryBenefits: offer.statutoryBenefits ?? { ...defaultStatutoryBenefits },
     components: offer.components.map((component, i) => ({ ...component, id: `${key}-${i}` })),
@@ -154,7 +154,7 @@ export function compareOffers(input) {
     // call again without copying editor-only IDs or ignored benefit defaults.
     inputs: {
       offers: Object.fromEntries(Object.entries(supplied).map(([key, offer]) => [key, {
-        name: offers[key].name, location: offers[key].location, ...offer,
+        name: offers[key].name, ...offer,
       }])),
       assumptions: fx, horizon,
     },

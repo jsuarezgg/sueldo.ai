@@ -1,0 +1,49 @@
+sueldo.ai — Proprietary License
+
+Copyright (C) 2026 jsuarezgg. All rights reserved.
+
+This notice applies to the original sueldo.ai code, documentation, and assets
+in revisions distributed with this notice, except material identified as
+subject to a separate license.
+
+1. Limited permission
+
+You may view the source code for reference and use the official hosted
+sueldo.ai service as intended, including generating and sharing your own
+comparison results. Browser execution and copies technically necessary for
+that use are permitted. These permissions do not authorize reuse of the
+software in another product or service.
+
+2. No reuse permission
+
+Except for the limited permission above, rights granted by applicable
+hosting-platform terms, rights that cannot be restricted under applicable
+law, or separate written permission from the copyright holder, no permission
+is granted to copy, modify, redistribute, sublicense, sell, self-host, or
+create derivative works of the software, in whole or in part, for commercial
+or noncommercial purposes. Public access to this repository does not grant
+an open-source license.
+
+3. Third-party material
+
+Third-party dependencies, fonts, and other separately licensed material
+remain governed by their respective licenses. This notice does not replace
+or restrict those licenses. In particular, the Archivo font is licensed
+under the SIL Open Font License 1.1; see
+app/public/fonts/LICENSE-Archivo.txt.
+
+4. Previously granted rights
+
+This notice does not revoke or restrict rights already granted for versions
+or code previously distributed under AGPL-3.0-only or another license. Those
+rights continue under the applicable license and its conditions. The new
+terms apply only to the extent the copyright holder has the necessary rights
+to offer the material under them.
+
+5. Warranty and liability
+
+TO THE EXTENT PERMITTED BY APPLICABLE LAW, THE SOFTWARE IS PROVIDED "AS IS",
+WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+THE COPYRIGHT HOLDER SHALL NOT BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+LIABILITY ARISING FROM OR IN CONNECTION WITH THE SOFTWARE OR ITS USE.
