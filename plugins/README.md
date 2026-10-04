@@ -79,13 +79,14 @@ Record actual behavior, including any failures. A manual HTTP relay, arithmetic 
 - ChatGPT accepted an authless production connection and displayed one read-only tool, `compare_offers`, with the current intake description. The new and existing chat composers remained disabled after a reload, so this session did not execute native conversations. The prior tunnel-based test connection is separate and does not validate this release.
 - The publishing portal refused even a draft upload until publisher identity verification is complete. The existing Personal organization offers Individual and Business verification. No ZIP was uploaded, domain challenge created, attestation accepted or review submitted.
 - Vercel hosting is Hobby, Web Analytics is enabled, and both modern and legacy log-drain lists are empty. The privacy policy documents the verified access windows and their limits; no deletion guarantee is inferred from a dashboard window.
+- A free fixed-window WAF rule observes POST `/api/mcp` bursts above 600 requests per IP per 60 seconds. Its threshold action is `log`, so it blocks nothing; counters are per region and provider egress IPs may be shared. It adds no body/header capture. Inspect native traffic and test preview enforcement before changing the action to HTTP 429. Hobby has no on-demand compute overages or configurable Spend Management; exhausted allowances can pause the service. No paid plan was enabled.
 
 ## Before submitting
 
 - [ ] Resolve the public publisher name against the selected verified individual/business identity. Select the intended organization and project; do not create a new one just for packaging.
 - [ ] Confirm the support destination, category and Mexico availability in the portal.
 - [x] Verify hosting/analytics settings and document their actual access windows and user controls in the privacy policy. Hobby runtime logs are accessible for one hour and analytics reports for one month; analytics visitor sessions end after 24 hours. These are not universal provider deletion deadlines.
-- [ ] Verify hosting-layer abuse/rate limits and spending controls for the public endpoint without enabling request/response-body logging.
+- [ ] Complete hosting-layer rate-limit rollout after native traffic review. The observation rule is active; enforcement remains pending. Automatic DDoS protection and per-request bounds already apply. No request/response-body logging or paid spend controls were enabled.
 - [x] Review, merge and deploy the location-removal change, match the ready deployment to its commit and rerun production MCP checks. See the release evidence above.
 - [ ] Run and document the eight native desktop/mobile scenarios above; attach the real walkthrough URL.
 - [ ] Rebuild the ZIP, upload a **draft** at [OpenAI Plugins](https://platform.openai.com/plugins), and resolve the platform's metadata/tool findings. Local validation is not approval.
@@ -98,5 +99,6 @@ Record actual behavior, including any failures. A manual HTTP relay, arithmetic 
 - [Package your plugin](https://developers.openai.com/plugins/build/plugins): portable `plugin.json` / `mcp.json`, OpenAI extensions and supported assets.
 - [Upload and submit](https://developers.openai.com/plugins/deploy/submission): universal ChatGPT/Codex directory, field limits, exact review-case counts, verification, video, review and publication steps.
 - [Plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines): data minimization, truthful descriptions, privacy, annotations and native desktop/mobile testing.
+- [Vercel rate limiting](https://vercel.com/docs/vercel-firewall/vercel-waf/rate-limiting) and [Hobby plan](https://vercel.com/docs/plans/hobby): free rule allowance, regional counters, usage limits and personal/noncommercial scope. Recheck plan suitability if monetization or commercial use begins.
 
 Public submission uses the remote URL declaration, not `.app.json` registered-app references or lifecycle hooks. The public listing is separate from installing a local marketplace. No personal marketplace or client configuration is changed by these files.
