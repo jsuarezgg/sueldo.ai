@@ -72,20 +72,28 @@ Use a fresh conversation for each of the eight prompts in `plugin.json`, with on
 
 Record actual behavior, including any failures. A manual HTTP relay, arithmetic test or browser-only calculator demo is not evidence that the native plugin works. When a real, reviewer-accessible video exists, add its URL at `extensions.com.openai.review.demo_recording_url`; it is deliberately absent from this draft.
 
+## Launch evidence — 2026-10-04
+
+- PR #12 was merged as `aa94d6638378125d847ab40498431271d1097d2f`. Vercel deployment `dpl_2S9NkYGqCEV3ubehkB2QstBfLdxv` was ready for that exact commit and served `sueldo.ai`.
+- Production initialization and discovery passed. All six calculation calls from the five positive fixtures exactly matched the local engine, preserved their editable-link state and returned `no-store` without sessions. The removed `location` field was rejected.
+- ChatGPT accepted an authless production connection and displayed one read-only tool, `compare_offers`, with the current intake description. The new and existing chat composers remained disabled after a reload, so this session did not execute native conversations. The prior tunnel-based test connection is separate and does not validate this release.
+- The publishing portal refused even a draft upload until publisher identity verification is complete. The existing Personal organization offers Individual and Business verification. No ZIP was uploaded, domain challenge created, attestation accepted or review submitted.
+- Vercel hosting is Hobby, Web Analytics is enabled, and both modern and legacy log-drain lists are empty. The privacy policy documents the verified access windows and their limits; no deletion guarantee is inferred from a dashboard window.
+
 ## Before submitting
 
 - [ ] Resolve the public publisher name against the selected verified individual/business identity. Select the intended organization and project; do not create a new one just for packaging.
 - [ ] Confirm the support destination, category and Mexico availability in the portal.
-- [ ] Verify hosting/analytics retention settings and disclose their actual timelines and user controls in the public privacy policy. The current policy describes in-memory offer processing and separate provider policies but does not establish those infrastructure timelines. Do not invent retention guarantees.
+- [x] Verify hosting/analytics settings and document their actual access windows and user controls in the privacy policy. Hobby runtime logs are accessible for one hour and analytics reports for one month; analytics visitor sessions end after 24 hours. These are not universal provider deletion deadlines.
 - [ ] Verify hosting-layer abuse/rate limits and spending controls for the public endpoint without enabling request/response-body logging.
-- [ ] Review, merge and deploy the accompanying location-removal change, then match the ready deployment to its commit and rerun the MCP smoke checks. Do not claim this branch is live.
+- [x] Review, merge and deploy the location-removal change, match the ready deployment to its commit and rerun production MCP checks. See the release evidence above.
 - [ ] Run and document the eight native desktop/mobile scenarios above; attach the real walkthrough URL.
 - [ ] Rebuild the ZIP, upload a **draft** at [OpenAI Plugins](https://platform.openai.com/plugins), and resolve the platform's metadata/tool findings. Local validation is not approval.
 - [ ] Complete domain verification using the exact token from the portal at `https://sueldo.ai/.well-known/openai-apps-challenge`, served as plain text. No token has been created or committed. Check for another plugin's challenge before adding it; do not overwrite it.
-- [ ] Connect the MCP server and inspect the scanned tool/schema/annotations. No reviewer credentials are needed for this service.
+- [x] Connect the production MCP server in ChatGPT and inspect its scanned read-only tool and intake instructions. No reviewer credentials are needed. Repeat the scan in the publishing portal after identity verification.
 - [ ] Review the imported five positive/three negative cases, release notes and accessible video. Complete the owner's attestations and submit when authorized. After approval, the owner chooses when to publish.
 
-## Sources checked on 2026-10-03
+## Sources checked on 2026-10-04
 
 - [Package your plugin](https://developers.openai.com/plugins/build/plugins): portable `plugin.json` / `mcp.json`, OpenAI extensions and supported assets.
 - [Upload and submit](https://developers.openai.com/plugins/deploy/submission): universal ChatGPT/Codex directory, field limits, exact review-case counts, verification, video, review and publication steps.
