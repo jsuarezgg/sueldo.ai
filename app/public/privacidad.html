@@ -38,7 +38,7 @@
             La calculadora web procesa las ofertas en el navegador. La herramienta MCP opcional las procesa en
             el servidor durante cada solicitud. No creamos cuentas ni guardamos comparaciones en una base de datos.
           </p>
-          <p class="article-meta">Última actualización: 1 de octubre de 2026</p>
+          <p class="article-meta">Última actualización: 4 de octubre de 2026</p>
         </header>
 
         <section class="article-section">
@@ -67,6 +67,12 @@
             El cliente de IA y el proveedor de alojamiento tienen sus propias políticas; esta herramienta no controla
             su retención. Envía sólo los datos necesarios, usa etiquetas genéricas y evita documentos o identificadores personales.
           </p>
+          <p>
+            Puedes usar la calculadora web sin conectar un asistente. Desconectar la herramienta detiene nuevas
+            llamadas desde ese cliente, pero no elimina conversaciones ni enlaces ya conservados. Gestiona esas
+            copias mediante los controles de tu asistente y navegador. Los enlaces compartidos no se pueden revocar
+            desde sueldo.ai: evita compartirlos si no quieres que otra persona conserve la comparación.
+          </p>
         </section>
 
         <section class="article-section">
@@ -82,9 +88,17 @@
             del navegador.
           </p>
           <p>
-            Como en cualquier sitio web, la infraestructura de alojamiento puede procesar datos técnicos ordinarios
+            Vercel aloja el servicio y puede procesar datos técnicos ordinarios
             de una solicitud —por ejemplo, dirección IP, agente de usuario, ruta y hora— para entregar y proteger el
-            servicio, de acuerdo con las políticas del proveedor de infraestructura.
+            servicio. El plan Hobby que usamos permite consultar registros de ejecución de la última hora,
+            según los <a href="https://vercel.com/docs/logs/runtime#limits">límites de registros de Vercel</a>.
+          </p>
+          <p>
+            Esa ventana de consulta no garantiza la eliminación de todos los registros del proveedor. Vercel aplica
+            sus criterios de conservación operativa y obligaciones legales, descritos en su
+            <a href="https://vercel.com/legal/dpa">acuerdo de tratamiento de datos</a>. No configuramos exportaciones
+            de registros a otros servicios. Los datos de ofertas sólo permanecen en la memoria de nuestra función
+            durante la solicitud; no los incluimos en los registros de la aplicación.
           </p>
         </section>
 
@@ -115,6 +129,12 @@
             incluido el enlace de comparación que comienza con <code>#c=</code>.
           </p>
           <p>
+            Vercel Web Analytics descarta la sesión de visitante después de 24 horas. Nuestro plan permite consultar
+            un mes de estadísticas, según sus <a href="https://vercel.com/docs/analytics/limits-and-pricing">límites de analítica</a>.
+            La duración de una sesión y la ventana de consulta no son un plazo de eliminación de todas las estadísticas
+            del proveedor. Las llamadas MCP no cargan el script de analítica del sitio.
+          </p>
+          <p>
             Consulta cómo trata estos datos el proveedor en la
             <a href="https://vercel.com/docs/analytics/privacy-policy">documentación de privacidad de Vercel Web Analytics</a>.
             Los enlaces a fuentes oficiales y al repositorio llevan a sitios externos con sus propias políticas.
@@ -126,7 +146,8 @@
           <p>
             Si la aplicación incorpora persistencia, cuentas u otros mecanismos de seguimiento, esta página deberá actualizarse antes de
             que esos mecanismos se activen. Puedes revisar o reportar una discrepancia en el
-            <a href="https://github.com/jsuarezgg/sueldo.ai">repositorio del proyecto</a>.
+            <a href="https://github.com/jsuarezgg/sueldo.ai/issues">repositorio del proyecto</a>.
+            Los reportes son públicos: usa datos ficticios y no incluyas documentos, ofertas personales ni enlaces de comparación completos.
           </p>
         </section>
       </article>
