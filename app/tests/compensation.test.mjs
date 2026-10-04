@@ -769,6 +769,19 @@ test("RESICO remains blocked until personal eligibility is confirmed", () => {
   assert.ok(result.invalidReasons.some((reason) => reason.includes("Confirma")));
 });
 
+test("RSU cliffs require whole months within the grant duration", () => {
+  for (const cliffMonth of ["", -1, 3.5, 37]) {
+    const rsu = { ...testRsu, cliffMonth };
+    assert.ok(validateRsu(rsu, 17).some(({ field }) => field === "rsu.cliffMonth"));
+    const result = calculateOffer({ ...initialOffers.employee, rsu }, { fxRate: 17 }, 12);
+    assert.equal(result.valid, false);
+    assert.equal(result.economicValue, null);
+  }
+  for (const cliffMonth of [0, 3, 7, 36]) {
+    assert.deepEqual(validateRsu({ ...testRsu, cliffMonth }, 17), []);
+  }
+});
+
 test("legacy RSU schedules without an explicit sale fee remain valid at zero", () => {
   assert.deepEqual(validateRsu(testRsu, 17, "Nómina"), []);
 });

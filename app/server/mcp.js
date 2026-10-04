@@ -6,11 +6,11 @@ export const MCP_HOSTS = ["sueldo.ai", "www.sueldo.ai"];
 
 function createServer() {
   const server = new McpServer({ name: "sueldo.ai", version: "1.0.0", websiteUrl: "https://sueldo.ai" }, {
-    instructions: "Compara dos ofertas para residentes fiscales en México. Pregunta por datos faltantes, costos y prestaciones antes de calcular; no inventes valores ni confirmes RESICO por la persona. Usa etiquetas genéricas y sólo datos necesarios, nunca documentos ni identificadores personales. Presenta supuestos, límites y enlace editable. El enlace revela los datos a cualquiera que lo reciba.",
+    instructions: "Compara dos ofertas para residentes fiscales en México. Recoge datos por etapas, con un máximo de tres preguntas concretas por turno, sin listas de subpreguntas. Pregunta sólo lo que falte: primero alcance, sueldo bruto, moneda y periodicidad; después prestaciones, costos y supuestos. El símbolo $ no confirma MXN ni USD. No calcules hasta completar los datos, no inventes valores ni confirmes RESICO por la persona. Usa etiquetas genéricas y sólo datos necesarios, nunca documentos ni identificadores personales. Presenta supuestos, límites y enlace editable. El enlace revela los datos a cualquiera que lo reciba.",
   });
   server.registerTool("compare_offers", {
     title: "Comparar ofertas en México",
-    description: "Calcula dos ofertas de nómina o contractor (MXN/USD) con el mismo motor de sueldo.ai y devuelve efectivo, impuestos, prestaciones, costos, RSUs, supuestos y enlace editable. No guarda comparaciones. Pregunta por información faltante: 0, [] y null deben ser elecciones explícitas, no supuestos silenciosos. Contractor sólo con elegibilidad RESICO confirmada. Consulta https://sueldo.ai/mcp.md para unidades y un ejemplo.",
+    description: "Calcula dos ofertas de nómina o contractor (MXN/USD) con el mismo motor de sueldo.ai y devuelve efectivo, impuestos, prestaciones, costos, RSUs, supuestos y enlace editable. No guarda comparaciones. Aclara lo que falte por etapas, con hasta tres preguntas concretas por turno; confirma la moneda si sólo aparece $. No calcules con datos pendientes: 0, [] y null deben ser elecciones explícitas, no supuestos silenciosos. Contractor sólo con elegibilidad RESICO confirmada. Consulta https://sueldo.ai/mcp.md para unidades y un ejemplo.",
     inputSchema: compareOffersInputSchema,
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
   }, compareOffers);
