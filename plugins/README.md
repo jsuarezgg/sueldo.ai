@@ -1,6 +1,6 @@
 # sueldo.ai plugin preparation
 
-This is a **draft public-directory package**, not a submitted or installed plugin. It connects the existing `https://sueldo.ai/api/mcp` service to clients through the portable Agent Plugins format. It contains one remote MCP connection, listing metadata, the existing brand icon and the proprietary license. It ships no calculation code, skills, hooks, authentication, embedded UI, database or AI model dependency.
+This is a **draft public-directory package** uploaded to the verified publisher account; it has not been submitted for review or published. A separate private production test connection is installed in ChatGPT. It connects the existing `https://sueldo.ai/api/mcp` service to clients through the portable Agent Plugins format. It contains one remote MCP connection, listing metadata, the existing brand icon and the proprietary license. It ships no calculation code, skills, hooks, authentication, embedded UI, database or AI model dependency.
 
 The initial product scope and proposed directory availability are Mexico. Other MCP clients can still connect directly to the same endpoint. A directory listing does not guarantee discovery or automatic tool access in an unconfigured assistant.
 
@@ -36,8 +36,8 @@ Before releasing the accompanying MCP schema change, run `npm test`, `npm run bu
 | --- | --- |
 | Name | sueldo.ai |
 | Subtitle | Compare job offers in Mexico |
-| Category | Productivity; confirm that the portal offers this title |
-| Publisher | jsuarezgg, the current repository copyright holder; replace with the actual verified identity before submission if different |
+| Category | Finance; accepted by the publishing portal |
+| Publisher | JUAN MANUEL SUAREZ GARCIA, the verified individual identity; organization label `jsuarezg` |
 | Support | [GitHub issues](https://github.com/jsuarezgg/sueldo.ai/issues), the project's existing public support destination |
 | Website / privacy / terms | [sueldo.ai](https://sueldo.ai), [privacy](https://sueldo.ai/privacidad), [terms](https://sueldo.ai/terminos) |
 | Availability | MX |
@@ -81,20 +81,28 @@ Record actual behavior, including any failures. A manual HTTP relay, arithmetic 
 - Vercel hosting is Hobby, Web Analytics is enabled, and both modern and legacy log-drain lists are empty. The privacy policy documents the verified access windows and their limits; no deletion guarantee is inferred from a dashboard window.
 - A free fixed-window WAF rule observes POST `/api/mcp` bursts above 600 requests per IP per 60 seconds. Its threshold action is `log`, so it blocks nothing; counters are per region and provider egress IPs may be shared. It adds no body/header capture. Inspect native traffic and test preview enforcement before changing the action to HTTP 429. Hobby has no on-demand compute overages or configurable Spend Management; exhausted allowances can pause the service. No paid plan was enabled.
 
+## Submission progress — 2026-10-05
+
+- The existing organization is verified as an individual. The directory uses the verified legal name shown above; the organization label and repository author handle are separate.
+- A real [publishing draft](https://platform.openai.com/plugins/manage/plugin_asdk_app_6ac39bea88008191882305a99535ef68) was uploaded, then updated to Finance. Its metadata panel reports **No Issues**. Support and policy URLs were imported correctly; MX availability is declared in the package.
+- The portal issued a domain challenge, added at `app/public/.well-known/openai-apps-challenge` with an exact-path plain-text header. Deployment and portal verification must succeed before marking domain ownership complete.
+- Native ChatGPT conversations are working again. The first payroll/contractor response matches the pinned recurring and annual amounts and includes an editable link. Explicit tool-call evidence, remaining cases, mobile testing and the review video are still pending; correct numbers alone are not proof of native MCP execution.
+- Review submission and its final attestations remain incomplete. No video URL has been invented and the plugin is not public.
+
 ## Before submitting
 
-- [ ] Resolve the public publisher name against the selected verified individual/business identity. Select the intended organization and project; do not create a new one just for packaging.
+- [x] Resolve the public publisher name against the selected verified individual identity in the existing organization and project.
 - [ ] Confirm the support destination, category and Mexico availability in the portal.
 - [x] Verify hosting/analytics settings and document their actual access windows and user controls in the privacy policy. Hobby runtime logs are accessible for one hour and analytics reports for one month; analytics visitor sessions end after 24 hours. These are not universal provider deletion deadlines.
 - [ ] Complete hosting-layer rate-limit rollout after native traffic review. The observation rule is active; enforcement remains pending. Automatic DDoS protection and per-request bounds already apply. No request/response-body logging or paid spend controls were enabled.
 - [x] Review, merge and deploy the location-removal change, match the ready deployment to its commit and rerun production MCP checks. See the release evidence above.
 - [ ] Run and document the eight native desktop/mobile scenarios above; attach the real walkthrough URL.
 - [ ] Rebuild the ZIP, upload a **draft** at [OpenAI Plugins](https://platform.openai.com/plugins), and resolve the platform's metadata/tool findings. Local validation is not approval.
-- [ ] Complete domain verification using the exact token from the portal at `https://sueldo.ai/.well-known/openai-apps-challenge`, served as plain text. No token has been created or committed. Check for another plugin's challenge before adding it; do not overwrite it.
+- [ ] Complete domain verification using the exact token from the portal at `https://sueldo.ai/.well-known/openai-apps-challenge`, served as plain text. The issued token is included in the static site; the route previously returned 404. Verify the deployed body byte-for-byte before using the portal's Verify Domain action.
 - [x] Connect the production MCP server in ChatGPT and inspect its scanned read-only tool and intake instructions. No reviewer credentials are needed. Repeat the scan in the publishing portal after identity verification.
 - [ ] Review the imported five positive/three negative cases, release notes and accessible video. Complete the owner's attestations and submit when authorized. After approval, the owner chooses when to publish.
 
-## Sources checked on 2026-10-04
+## Sources checked on 2026-10-04 (submission guide rechecked 2026-10-05)
 
 - [Package your plugin](https://developers.openai.com/plugins/build/plugins): portable `plugin.json` / `mcp.json`, OpenAI extensions and supported assets.
 - [Upload and submit](https://developers.openai.com/plugins/deploy/submission): universal ChatGPT/Codex directory, field limits, exact review-case counts, verification, video, review and publication steps.

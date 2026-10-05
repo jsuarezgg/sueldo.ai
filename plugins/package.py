@@ -45,7 +45,7 @@ def main():
     interface = extension["interface"]
     for field, limit in [("displayName", 30), ("shortDescription", 30), ("longDescription", 4000), ("developerName", 80)]:
         require(bounded_text(interface.get(field), limit), f"Invalid {field}")
-    require(interface.get("category") == "Productivity", "Confirm category against the submission dashboard")
+    require(interface.get("category") == "Finance", "Confirm category against the submission dashboard")
     for field in ["websiteURL", "supportURL", "privacyPolicyURL", "termsOfServiceURL"]:
         url = urlsplit(interface.get(field, ""))
         require(url.scheme == "https" and url.hostname and not url.username and not url.password and len(url.geturl()) <= 1024, f"Invalid {field}")
