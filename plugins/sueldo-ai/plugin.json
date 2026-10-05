@@ -24,8 +24,8 @@
         "displayName": "sueldo.ai",
         "shortDescription": "Compare job offers in Mexico",
         "longDescription": "Compare two job offers for a tax resident of Mexico, with either offer paid through Mexican payroll or as an eligible RESICO contractor in MXN or USD. See estimated take-home cash, taxes, benefits, personal costs and payroll RSUs separately, over 12 or 36 months. Change an exchange-rate assumption and calculate again, or open the editable comparison on sueldo.ai.\n\nThe tool uses the same deterministic 2026 calculation engine as the website. It asks for missing details and requires personal RESICO eligibility to be confirmed. Other tax jurisdictions and unsupported arrangements are outside its scope. Results are informational estimates, not tax, legal, accounting or investment advice.\n\nNo account is required. Offer figures are processed in server memory for the request; the application does not store comparisons or log their contents. Your AI client and hosting providers have their own retention policies. The returned link encodes both offers and can be read by anyone who receives it. Send only the necessary figures, not identifying documents.",
-        "developerName": "jsuarezgg",
-        "category": "Productivity",
+        "developerName": "JUAN MANUEL SUAREZ GARCIA",
+        "category": "Finance",
         "capabilities": [
           "Compare two Mexican job offers",
           "Separate cash, benefits, costs and equity",
