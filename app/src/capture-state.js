@@ -1,8 +1,6 @@
-const OFFER_KEYS = ["employee", "contractor"];
-const OFFER_LABELS = {
-  employee: "Oferta A",
-  contractor: "Oferta B",
-};
+export const OFFER_KEYS = ["employee", "contractor"];
+export const OFFER_LETTERS = { employee: "A", contractor: "B" };
+export const OFFER_LABELS = { employee: "Oferta A", contractor: "Oferta B" };
 
 const SUPPORTED_CURRENCIES = new Set(["MXN", "USD"]);
 const SUPPORTED_RELATIONSHIPS = new Set(["Nómina", "Contratista independiente"]);

@@ -91,12 +91,12 @@ function escapeXml(value) {
     .replaceAll("'", "&apos;");
 }
 
-function metricHeadline(metric) {
+export function metricHeadline(metric) {
   if (metric.tied) return "≈";
   return metric.percentLabel ? `+${metric.percentLabel}` : "Mayor";
 }
 
-function metricSupport(metric, noun) {
+export function metricSupport(metric, noun) {
   if (metric.tied) return `${noun}: prácticamente igual`;
   const detail = metric.differenceLabel ? ` · ${metric.differenceLabel}` : "";
   return `${noun}: ${metric.winnerLabel}${detail}`;
