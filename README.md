@@ -36,8 +36,11 @@ On a loaded Mac, inspect `memory_pressure`, `vm_stat`, and `sysctl vm.swapusage`
 | --- | --- |
 | `app/src/compensation.js` | Versioned tax rules, offer calculations, validation, and vesting events |
 | `app/src/capture-state.js` | Capture reducer and base-pay/FX validation |
-| `app/src/App.jsx` | Offer capture, editing, results, and sharing flows |
-| `app/src/OfferComparison.jsx`, `app/src/VestingChart.jsx` | Comparison and vesting presentation |
+| `app/src/App.jsx` | Session bootstrap, shared-link entry, FX fetch, and view routing |
+| `app/src/CaptureView.jsx`, `app/src/CompensationEditor.jsx`, `app/src/AssumptionsEditor.jsx` | Three-step offer capture |
+| `app/src/ResultsView.jsx`, `app/src/ShareComparison.jsx` | Results ledger, RSU statements, and sharing |
+| `app/src/RsuWorkspace.jsx`, `app/src/Vesting.jsx`, `app/src/VestingChart.jsx` | RSU schedule editor and vesting presentation |
+| `app/src/fields.jsx`, `app/src/format.js`, `app/src/OfferComparison.jsx` | Shared inputs, display formatting, and comparison bars |
 | `app/src/share-link.js`, `app/src/share-summary.js` | Versioned URL state and optional share-card export |
 | `app/server/banxico-fix.js` | Shared Banxico FIX fetch/parser |
 | `app/server/compare-offers.js`, `app/server/mcp.js` | Bounded MCP inputs, shared-engine calculation and stateless protocol handler |

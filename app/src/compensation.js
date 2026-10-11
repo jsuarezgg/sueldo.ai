@@ -122,8 +122,6 @@ export const CEAV_EMPLOYER_RATES_BY_YEAR = {
   ],
 };
 
-export const CEAV_EMPLOYER_RATES_2026 = CEAV_EMPLOYER_RATES_BY_YEAR[2026];
-
 export const defaultStatutoryBenefits = {
   tenureYears: 1,
   aguinaldoDays: 15,

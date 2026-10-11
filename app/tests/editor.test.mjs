@@ -11,7 +11,14 @@ import { createShareUrl, readSharedComparison } from "../src/share-link.js";
 
 // Exercise the real JSX controls with the existing Node test runner.
 const bundled = await build({
-  entryPoints: [fileURLToPath(new URL("../src/App.jsx", import.meta.url))],
+  stdin: {
+    contents: [
+      'export { ComponentRow } from "./CompensationEditor.jsx";',
+      'export { RsuWorkspace } from "./RsuWorkspace.jsx";',
+    ].join("\n"),
+    resolveDir: fileURLToPath(new URL("../src/", import.meta.url)),
+    loader: "jsx",
+  },
   bundle: true,
   platform: "node",
   format: "cjs",

@@ -9,11 +9,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { MXN, USD, buildVestingEvents } from "./compensation.js";
-
-function formatGrantValue(value, currency = "MXN") {
-  return (currency === "USD" ? USD : MXN).format(Number(value) || 0);
-}
+import { buildVestingEvents } from "./compensation.js";
+import { formatGrantValue } from "./format.js";
 
 function VestingTooltip({ active, payload, currency }) {
   if (!active || !payload?.length) return null;
