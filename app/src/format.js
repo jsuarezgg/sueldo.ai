@@ -23,6 +23,11 @@ export function formatGrantValue(value, currency = "MXN") {
   return (currency === "USD" ? USD : MXN).format(Number(value) || 0);
 }
 
+export const CURRENCY_OPTIONS = [
+  { value: "MXN", label: "MXN" },
+  { value: "USD", label: "USD" },
+];
+
 export const CADENCE_OPTIONS = [
   { value: 1, label: "Mensual" },
   { value: 3, label: "Trimestral" },
@@ -54,4 +59,17 @@ export function describeInvalidReason(reason) {
 export function summarizeInvalidCalculation(calculation) {
   return REASON_SUMMARY[calculation.taxProfile?.reason]
     ?? describeInvalidReason(calculation.invalidReasons[0]);
+}
+
+export function describeResico(profile) {
+  switch (profile.reason) {
+    case "income-limit":
+      return `${MXN.format(profile.annualIncome)} gravados al año superan el límite de RESICO de ${MXN.format(3500000)}`;
+    case "profile-unconfirmed":
+      return "Confirma tu elegibilidad para RESICO en el paso Ofertas";
+    case "profile-ineligible":
+      return "El perfil indicado requiere otro régimen fiscal";
+    default:
+      return `${profile.rate.toFixed(2)}% · ${MXN.format(profile.annualIncome)} gravados en el año`;
+  }
 }

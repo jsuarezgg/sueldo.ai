@@ -58,18 +58,18 @@ test("sitemap dates reflect each page's last material change", async () => {
     entry.match(/<lastmod>([^<]+)<\/lastmod>/)?.[1],
   ]);
 
-  // The calculator changed on September 7. The September 8 public release
-  // added repository licensing without changing page content. Keep unchanged
-  // pages' dates when releasing sitemap or other infrastructure updates.
+  // The calculator and its usage guides changed on October 10, when RESICO
+  // eligibility moved to the first step. Keep unchanged pages' dates when
+  // releasing sitemap or other infrastructure updates.
   assert.deepEqual(entries, [
-    ["https://sueldo.ai/", "2026-09-07"],
-    ["https://sueldo.ai/como-usar", "2026-08-30"],
+    ["https://sueldo.ai/", "2026-10-10"],
+    ["https://sueldo.ai/como-usar", "2026-10-10"],
     ["https://sueldo.ai/metodologia", "2026-08-30"],
     ["https://sueldo.ai/comparar-nomina-contractor-mexico", "2026-08-30"],
     ["https://sueldo.ai/acerca", "2026-08-30"],
     ["https://sueldo.ai/privacidad", "2026-10-04"],
     ["https://sueldo.ai/terminos", "2026-08-30"],
-    ["https://sueldo.ai/uso.md", "2026-10-01"],
+    ["https://sueldo.ai/uso.md", "2026-10-10"],
     ["https://sueldo.ai/mcp.md", "2026-10-04"],
   ]);
 });

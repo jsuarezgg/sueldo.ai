@@ -8,12 +8,15 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { calculateComparison, initialOffers } from "../src/compensation.js";
 import { createShareUrl, readSharedComparison } from "../src/share-link.js";
+import { buildShareCardSvg, createShareSummary } from "../src/share-summary.js";
 
 // Exercise the real JSX controls with the existing Node test runner.
 const bundled = await build({
   stdin: {
     contents: [
+      'export { CaptureView } from "./CaptureView.jsx";',
       'export { ComponentRow } from "./CompensationEditor.jsx";',
+      'export { ResultsView } from "./ResultsView.jsx";',
       'export { RsuWorkspace } from "./RsuWorkspace.jsx";',
     ].join("\n"),
     resolveDir: fileURLToPath(new URL("../src/", import.meta.url)),
@@ -31,7 +34,7 @@ const compiled = { exports: {} };
 compileFunction(bundled.outputFiles[0].text, ["require", "module", "exports"])(
   createRequire(import.meta.url), compiled, compiled.exports,
 );
-const { ComponentRow, RsuWorkspace } = compiled.exports;
+const { CaptureView, ComponentRow, ResultsView, RsuWorkspace } = compiled.exports;
 const assumptions = { fxRate: 18, fxDate: null };
 const noop = () => {};
 
@@ -53,7 +56,7 @@ function renderGrant(years, cliffMonth) {
 test("the RSU editor displays exact cliffs and durations outside the old presets", () => {
   for (const [years, cliff] of [[1, 3], [2, 7], [6, 13], [12, 144]]) {
     const html = renderGrant(years, cliff);
-    assert.match(html, new RegExp(`<span>${years} ${years === 1 ? "año" : "años"}</span>`));
+    assert.match(html, new RegExp(`<option value="${years}" selected="">${years} ${years === 1 ? "año" : "años"}</option>`));
     assert.match(html, new RegExp(`<input[^>]*max="${years * 12}"[^>]*value="${cliff}"`));
     assert.doesNotMatch(html, /<span>Sin cliff<\/span>/);
   }
@@ -96,4 +99,45 @@ test("editing a restored restricted benefit changes the correct totals and survi
   assert.equal(after.employee.economicValue - before.employee.economicValue, -3400);
   assert.equal(restored.offers.employee.components[0].cash, true);
   assert.equal(restored.offers.employee.components[0].utilization, 50);
+});
+
+function renderOffersStep(offers) {
+  return renderToStaticMarkup(createElement(CaptureView, {
+    offers, assumptions: { ...assumptions, fxStatus: "manual" }, step: 0,
+    setOffers: noop, setAssumptions: noop, setStep: noop, onCompare: noop, onEditRsu: noop,
+  }));
+}
+
+test("RESICO eligibility is asked on the first step, only for contractor offers", () => {
+  const html = renderOffersStep(structuredClone(initialOffers));
+  const radios = html.match(/<input[^>]*name="resico-[a-z]+"[^>]*>/g) ?? [];
+  assert.equal(radios.length, 2);
+  assert.ok(radios.every((radio) => radio.includes('name="resico-contractor"')));
+  // "unconfirmed" stays the unanswered state rather than a preselected option.
+  assert.ok(radios.every((radio) => !radio.includes("checked")));
+
+  const overLimit = structuredClone(initialOffers);
+  overLimit.contractor.resicoEligibilityStatus = "eligible";
+  overLimit.contractor.monthlyPay = 20000;
+  assert.match(renderOffersStep(overLimit), /superan el límite de RESICO/);
+});
+
+function resultsFor(offers) {
+  return renderToStaticMarkup(createElement(ResultsView, {
+    offers, assumptions, horizon: "year", setHorizon: noop, onEditOffers: noop, onEditRsu: noop,
+  }));
+}
+
+test("results omit an empty location and preview the same copy as the PNG", () => {
+  const offers = structuredClone(initialOffers);
+  offers.contractor.resicoEligibilityStatus = "eligible";
+  offers.employee.location = "";
+  const html = resultsFor(offers);
+  assert.match(html, /<small>Nómina<\/small>/);
+
+  const calculations = calculateComparison(offers, assumptions, "year");
+  const svg = buildShareCardSvg(createShareSummary({ offers, calculations, months: 12 }));
+  for (const line of svg.match(/>(Mayor valor económico|Más efectivo mensual)[^<]*</g)) {
+    assert.ok(html.includes(line), `preview is missing ${line}`);
+  }
 });

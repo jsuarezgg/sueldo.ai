@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { CaretDown, Copy, DownloadSimple, ShareNetwork } from "@phosphor-icons/react";
-import { createShareCardPng, createShareSummary } from "./share-summary.js";
+import { createShareCardPng, createShareSummary, metricHeadline, metricSupport } from "./share-summary.js";
 import { buildUrlShareData, createShareUrl } from "./share-link.js";
 
 function downloadBlob(blob, filename) {
@@ -24,15 +24,6 @@ export function ShareComparison({ offers, assumptions, horizon, calculations }) 
     months: calculations.months,
     includeDetails,
   }), [offers, calculations, includeDetails]);
-  const { economic, cash } = summary;
-
-  const economicHeadline = economic.tied ? "≈" : economic.percentLabel ? `+${economic.percentLabel}` : "Mayor";
-  const economicSupport = economic.tied
-    ? "Valor económico prácticamente igual"
-    : `Mayor valor económico: ${economic.winnerLabel}${economic.differenceLabel ? ` · ${economic.differenceLabel}` : ""}`;
-  const cashSupport = cash.tied
-    ? "Efectivo mensual prácticamente igual"
-    : `Más efectivo mensual: ${cash.winnerLabel}${cash.percentLabel ? ` · +${cash.percentLabel}` : ""}${cash.differenceLabel ? ` · ${cash.differenceLabel}` : ""}`;
 
   const shareUrl = () => createShareUrl({ offers, assumptions, horizon });
 
@@ -129,10 +120,10 @@ export function ShareComparison({ offers, assumptions, horizon, calculations }) 
               <small>{summary.periodLabel}</small>
             </div>
             <p className="share-preview-offers">{summary.offerALabel} <span>vs.</span> {summary.offerBLabel}</p>
-            <strong className="share-preview-value">{economicHeadline}</strong>
-            <p className="share-preview-result">{economicSupport}</p>
+            <strong className="share-preview-value">{metricHeadline(summary.economic)}</strong>
+            <p className="share-preview-result">{metricSupport(summary.economic, "Mayor valor económico")}</p>
             <div className="share-preview-footer">
-              <span>{cashSupport}</span>
+              <span>{metricSupport(summary.cash, "Más efectivo mensual")}</span>
               <small>Compara cualquier oferta</small>
             </div>
           </div>

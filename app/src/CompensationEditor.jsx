@@ -8,13 +8,8 @@ import {
   statutoryVacationDays,
 } from "./compensation.js";
 import { OFFER_LABELS } from "./capture-state.js";
-import { CompactValueInput, Disclosure, PercentInput, PickerField, numericInputValue } from "./fields.jsx";
-import { cadenceLabel, formatGrantValue } from "./format.js";
-
-const CURRENCY_OPTIONS = [
-  { value: "MXN", label: "MXN" },
-  { value: "USD", label: "USD" },
-];
+import { CompactValueInput, Disclosure, PercentInput, SelectField, numericInputValue } from "./fields.jsx";
+import { CURRENCY_OPTIONS, cadenceLabel, formatGrantValue } from "./format.js";
 
 const FREQUENCY_OPTIONS = Object.entries(frequencyLabels).map(([value, label]) => ({ value, label }));
 
@@ -37,14 +32,14 @@ export function ComponentRow({ component, onChange, onRemove }) {
           onChange={(event) => onChange({ amount: numericInputValue(event) })}
         />
       </div>
-      <PickerField
+      <SelectField
         ariaLabel={`Moneda de ${component.name}`}
         className="component-currency-picker"
         value={component.currency ?? "MXN"}
         options={CURRENCY_OPTIONS}
         onChange={(currency) => onChange({ currency })}
       />
-      <PickerField
+      <SelectField
         ariaLabel={`Frecuencia de ${component.name}`}
         className="component-frequency-picker"
         value={component.frequency}

@@ -1,14 +1,9 @@
 import { useMemo, useState } from "react";
 import { Check } from "@phosphor-icons/react";
 import { buildVestingEvents, defaultRsu, validateRsu } from "./compensation.js";
-import { BrandHeader, MoneyInput, PercentInput, PickerField, QuantityInput, numericInputValue } from "./fields.jsx";
-import { CADENCE_OPTIONS, formatGrantValue } from "./format.js";
+import { BrandHeader, MoneyInput, PercentInput, SelectField, QuantityInput, numericInputValue } from "./fields.jsx";
+import { CADENCE_OPTIONS, CURRENCY_OPTIONS, formatGrantValue } from "./format.js";
 import { VestingChart, VestingEventGrid } from "./Vesting.jsx";
-
-const CURRENCY_OPTIONS = [
-  { value: "MXN", label: "MXN" },
-  { value: "USD", label: "USD" },
-];
 
 const DURATION_OPTIONS = Array.from({ length: 12 }, (_, index) => ({
   value: index + 1,
@@ -50,7 +45,7 @@ export function RsuWorkspace({ offer, assumptions, onSave, onCancel }) {
 
   return (
     <div className="app-shell rsu-workspace">
-      <BrandHeader onHome={onCancel}>Calendario de RSUs</BrandHeader>
+      <BrandHeader onHome={onCancel} />
       <main className="rsu-workspace-main">
         <button className="back-link" onClick={onCancel}>Volver a la comparación</button>
 
@@ -80,7 +75,7 @@ export function RsuWorkspace({ offer, assumptions, onSave, onCancel }) {
                   prefix={draft.currency === "USD" ? "US$" : "$"}
                   onChange={(grantValue) => update({ grantValue })}
                 />
-                <PickerField
+                <SelectField
                   label="Moneda"
                   value={draft.currency ?? "MXN"}
                   options={CURRENCY_OPTIONS}
@@ -88,7 +83,7 @@ export function RsuWorkspace({ offer, assumptions, onSave, onCancel }) {
                 />
               </div>
               <div className="field-row">
-                <PickerField
+                <SelectField
                   label="Duración"
                   value={draft.allocations.length}
                   options={DURATION_OPTIONS}
@@ -103,7 +98,7 @@ export function RsuWorkspace({ offer, assumptions, onSave, onCancel }) {
                 />
               </div>
               <p className="rsu-control-note">Usa 0 si no hay cliff.</p>
-              <PickerField
+              <SelectField
                 label="Frecuencia dentro de cada año"
                 value={draft.cadence}
                 options={CADENCE_OPTIONS}

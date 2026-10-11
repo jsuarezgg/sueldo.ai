@@ -10,13 +10,12 @@ sueldo.ai es una calculadora gratuita y sin registro para comparar cualquier par
 ## Uso rápido
 
 1. Abre https://sueldo.ai/.
-2. Captura el pago bruto mensual de cada oferta, su moneda y el tipo de relación.
+2. Captura el pago bruto mensual de cada oferta, su moneda y el tipo de relación. Si una oferta es de contractor, confirma ahí mismo si cumples los requisitos de RESICO; el cálculo se bloquea si no se confirma o si el ingreso anualizado supera MXN 3.5 millones.
 3. Agrega la compensación adicional de cada oferta: bonos, reembolsos, beneficios, vacaciones pagadas, seguros, fondo de ahorro o RSUs, según corresponda.
 4. Revisa los supuestos. La aplicación consulta Banxico FIX para convertir USD a MXN; si la consulta falla, permite confirmar un tipo de cambio manual.
-5. Confirma la elegibilidad de RESICO si una oferta es de contractor. El cálculo se bloquea si no se confirma o si el ingreso anualizado supera MXN 3.5 millones.
-6. Compara el promedio mensual neto y el valor económico total a 12 meses o tres años.
-7. Abre los desgloses y las fuentes antes de tomar una decisión.
-8. Si quieres compartir el resultado, genera el enlace. La URL restaura ambas ofertas, todos los números y supuestos, y el horizonte elegido. Cualquier persona con el enlace puede ver la comparación.
+5. Compara el promedio mensual neto y el valor económico total a 12 meses o tres años.
+6. Abre los desgloses y las fuentes antes de tomar una decisión.
+7. Si quieres compartir el resultado, genera el enlace. La URL restaura ambas ofertas, todos los números y supuestos, y el horizonte elegido. Cualquier persona con el enlace puede ver la comparación.
 
 ## Datos que acepta
 

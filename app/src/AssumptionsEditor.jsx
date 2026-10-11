@@ -1,26 +1,7 @@
 import { WarningCircle } from "@phosphor-icons/react";
 import { EMPLOYMENT_SUBSIDY_2026, MXN, TAX_YEAR, isPayrollOffer } from "./compensation.js";
-import { CalculatedLine, Disclosure, MoneyInput, PercentInput, PickerField, QuantityInput } from "./fields.jsx";
-import { MXN_WITH_CENTS } from "./format.js";
-
-const RESICO_STATUS_OPTIONS = [
-  { value: "unconfirmed", label: "Por confirmar" },
-  { value: "eligible", label: "Sí cumplo" },
-  { value: "ineligible", label: "No cumplo / no sé" },
-];
-
-function describeResico(profile) {
-  switch (profile.reason) {
-    case "income-limit":
-      return `${MXN.format(profile.annualIncome)} gravados · supera el límite de ${MXN.format(3500000)}`;
-    case "profile-unconfirmed":
-      return "Confirma tu perfil; el límite de ingresos por sí solo no basta";
-    case "profile-ineligible":
-      return "El perfil indicado requiere otro régimen fiscal";
-    default:
-      return `${profile.rate.toFixed(2)}% · ${MXN.format(profile.annualIncome)} gravados en el año`;
-  }
-}
+import { CalculatedLine, Disclosure, MoneyInput, PercentInput, QuantityInput } from "./fields.jsx";
+import { MXN_WITH_CENTS, describeResico } from "./format.js";
 
 function describeImssBasis(imss) {
   if (imss.employerCovered) return "El patrón absorbe la cuota al salario mínimo";
@@ -119,27 +100,12 @@ function ContractorAssumptions({ offer, calculation, onChange }) {
           />
         </div>
       </Disclosure>
-      <div className="resico-attestation">
-        <PickerField
-          label="Elegibilidad personal para RESICO"
-          value={offer.resicoEligibilityStatus ?? "unconfirmed"}
-          options={RESICO_STATUS_OPTIONS}
-          onChange={(resicoEligibilityStatus) => onChange({ resicoEligibilityStatus })}
-        />
-        <Disclosure className="resico-eligibility-disclosure" summary="Qué confirma esta selección">
-          <p>
-            “Sí cumplo” confirma que revisaste las exclusiones personales: socios o accionistas,
-            partes relacionadas, establecimiento permanente en México, REFIPRE y ciertos ingresos
-            asimilados. <a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LISR.pdf" target="_blank" rel="noreferrer">LISR 113-E</a>
-          </p>
-        </Disclosure>
-      </div>
       {!profile.eligible ? (
         <div className="resico-blocker" role="alert">
           <WarningCircle size={20} weight="fill" />
           <div>
-            <strong>No mostramos un neto RESICO sin confirmar</strong>
-            <p>{resicoDetail}. Selecciona otro régimen fuera de esta calculadora si no aplica.</p>
+            <strong>No calculamos un neto RESICO para esta oferta</strong>
+            <p>{resicoDetail}.</p>
           </div>
         </div>
       ) : null}

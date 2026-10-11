@@ -152,7 +152,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -162,6 +163,7 @@ button {
 
 button:focus-visible,
 input:focus-visible,
+select:focus-visible,
 summary:focus-visible,
 a:focus-visible {
   outline: 3px solid var(--focus-ring);
@@ -234,16 +236,6 @@ input {
   align-items: baseline;
   cursor: pointer;
   letter-spacing: -0.02em;
-}
-
-.header-context {
-  min-height: 30px;
-  padding-left: 20px;
-  border-left: 1px solid var(--line);
-  color: var(--ink-soft);
-  display: flex;
-  align-items: center;
-  font-size: 13px;
 }
 
 .step-rail li {
@@ -358,134 +350,73 @@ input {
   border-color: var(--danger-ink);
 }
 
-.picker-field {
+.select-control {
   position: relative;
+  display: block;
   min-width: 0;
 }
 
-.picker-field.is-open {
-  z-index: 80;
-}
-
-.picker-control {
-  min-width: 0;
-  position: relative;
-}
-
-.picker-trigger {
+.select-control select {
   appearance: none;
   width: 100%;
   height: 48px;
-  padding: 0 10px 0 13px;
+  padding: 0 34px 0 13px;
   border: 1px solid var(--control-border);
   border-radius: 2px;
   background: var(--surface);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  text-align: left;
-  cursor: pointer;
-  transition: border-color 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
-}
-
-.picker-trigger > span {
-  min-width: 0;
-  overflow: hidden;
+  color: var(--ink);
   font-size: 15px;
   font-weight: 600;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 140ms ease, background-color 140ms ease;
 }
 
-.picker-trigger svg {
-  flex: none;
-  color: var(--icon-muted);
-  transition: transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1), color 140ms ease;
-}
-
-.picker-trigger:hover {
+.select-control select:hover {
   border-color: var(--control-border-hover);
   background: var(--control-hover);
 }
 
-.picker-trigger:active {
-  background: var(--surface-muted);
-  transform: scale(0.995);
-}
-
-.picker-field.is-open .picker-trigger {
-  border-color: var(--focus-border);
-  box-shadow: 0 0 0 2px var(--focus-ring);
-}
-
-.picker-field.is-open .picker-trigger svg {
-  color: var(--ink);
-  transform: rotate(180deg);
-}
-
-.picker-menu {
-  min-width: 100%;
-  max-height: 280px;
-  padding: 5px;
+.select-control svg {
   position: absolute;
-  top: calc(100% + 6px);
-  z-index: 100;
-  border: 1px solid var(--control-border);
-  border-radius: 2px;
-  background: var(--surface-raised);
-  box-shadow: var(--shadow-menu);
-  overflow-x: hidden;
-  transform-origin: top center;
-  animation: picker-materialize 150ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  top: 50%;
+  right: 10px;
+  translate: 0 -50%;
+  color: var(--icon-muted);
+  pointer-events: none;
 }
 
-.picker-option {
-  appearance: none;
-  width: 100%;
-  min-height: 44px;
-  padding: 0 9px 0 10px;
+.salary-row .select-control select {
+  height: 66px;
+  padding: 0 24px 0 6px;
   border: 0;
-  border-radius: 2px;
+  border-bottom: 1px solid var(--control-border);
+  border-radius: 0;
   background: transparent;
-  color: var(--menu-ink);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  font-size: 14px;
-  font-weight: 600;
-  text-align: left;
-  cursor: pointer;
 }
 
-.picker-option.active {
-  background: var(--menu-active);
+.salary-row .select-control svg {
+  right: 4px;
 }
 
-.picker-option.selected {
-  color: var(--brand-accent-strong);
+.component-frequency-picker select,
+.component-currency-picker select {
+  height: 42px;
+  padding: 0 26px 0 9px;
+  border-color: transparent;
+  background: transparent;
+  font-size: 12px;
 }
 
-.picker-option.selected.active {
+.component-frequency-picker select:hover,
+.component-currency-picker select:hover {
+  border-color: var(--control-border);
   background: var(--surface-muted);
 }
 
-.picker-option svg {
-  flex: none;
-  color: var(--brand-accent);
-}
-
-@keyframes picker-materialize {
-  from {
-    opacity: 0;
-    transform: translateY(-4px) scale(0.985);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+.component-frequency-picker svg,
+.component-currency-picker svg {
+  right: 7px;
 }
 
 .input-shell {
@@ -961,35 +892,6 @@ input {
   background: var(--surface-muted);
 }
 
-.component-frequency-picker .picker-trigger,
-.component-currency-picker .picker-trigger {
-  height: 42px;
-  padding: 0 8px 0 9px;
-  border-color: transparent;
-  background: transparent;
-}
-
-.component-frequency-picker .picker-trigger > span,
-.component-currency-picker .picker-trigger > span {
-  font-size: 12px;
-}
-
-.component-frequency-picker .picker-trigger:hover,
-.component-frequency-picker.is-open .picker-trigger,
-.component-currency-picker .picker-trigger:hover,
-.component-currency-picker.is-open .picker-trigger {
-  border-color: var(--control-border);
-  background: var(--surface-muted);
-}
-
-.component-frequency-picker .picker-menu {
-  width: max(100%, 180px);
-}
-
-.component-currency-picker .picker-menu {
-  width: max(100%, 110px);
-}
-
 .component-name {
   font-weight: 600;
 }
@@ -1250,21 +1152,6 @@ input {
   font-size: 13px;
 }
 
-.resico-attestation {
-  margin-bottom: 14px;
-}
-
-.resico-attestation p {
-  margin: 10px 0 0;
-  color: var(--ink-soft);
-  font-size: 13px;
-  line-height: 1.55;
-}
-
-.resico-attestation a {
-  color: var(--link);
-}
-
 .input-validation-blocker {
   margin: 0 24px 18px;
   padding: 13px 14px;
@@ -1379,7 +1266,17 @@ input {
 /* Results */
 
 .edit-offers {
-  color: var(--link);
+  min-height: 40px;
+  margin-top: 4px;
+  padding: 0 14px;
+  border: 1px solid var(--control-border);
+  border-radius: 2px;
+  color: var(--ink);
+}
+
+.edit-offers:hover {
+  border-color: var(--control-border-hover);
+  background: var(--control-hover);
 }
 
 .share-comparison {
@@ -1632,6 +1529,8 @@ input {
 }
 
 .ledger-head > div {
+  justify-items: end;
+  text-align: right;
   display: grid;
   align-content: center;
   gap: 2px;
@@ -1662,6 +1561,8 @@ input {
 }
 
 .result-cell {
+  justify-items: end;
+  text-align: right;
   display: grid;
   align-content: center;
   gap: 2px;
@@ -1692,32 +1593,18 @@ input {
   border-top: 2px solid var(--ink);
 }
 
-.ledger-totals .ledger-row {
-  grid-template-columns: calc(31% - 18px) calc(34.5% + 9px) calc(34.5% + 9px);
-}
-
 .ledger-totals .ledger-row > * {
   padding-top: 12px;
   padding-bottom: 12px;
 }
 
 .ledger-totals .ledger-row > span {
-  padding-left: 0;
   font-size: 13px;
   font-weight: 600;
 }
 
-.recurring-total,
-.cash-total {
+.recurring-total {
   border-bottom: 1px solid var(--line);
-}
-
-.economic-total {
-  min-height: 58px;
-}
-
-.economic-total .result-cell {
-  font-size: 16px;
 }
 
 .rsu-statement {
@@ -2428,15 +2315,6 @@ h1[tabindex="-1"]:focus {
   font-variant-numeric: tabular-nums;
 }
 
-.salary-row .picker-trigger {
-  height: 66px;
-  border: 0;
-  border-bottom: 1px solid var(--control-border);
-  border-radius: 0;
-  background: transparent;
-  padding-inline: 6px;
-}
-
 .salary-row .input-shell.has-error {
   border-color: var(--danger-ink);
 }
@@ -2485,6 +2363,27 @@ h1[tabindex="-1"]:focus {
   height: 15px;
   margin: 0;
   accent-color: var(--offer-color);
+}
+
+.resico-choice {
+  margin-top: 22px;
+}
+
+.field-hint {
+  flex-basis: 100%;
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.field-hint a {
+  color: inherit;
+}
+
+.resico-choice .currency-change-note {
+  flex-basis: 100%;
+  margin: 8px 0 0;
 }
 
 .capture-actions {
@@ -2803,13 +2702,6 @@ h1[tabindex="-1"]:focus {
   border-bottom: 1px solid var(--line);
 }
 
-.resico-eligibility-disclosure.always-collapsible > summary {
-  padding: 8px 0 0;
-  min-height: 44px;
-  color: var(--ink-soft);
-  font-size: 12px;
-}
-
 .results-main {
   margin: 0 auto;
   width: min(1160px, 100%);
@@ -2949,10 +2841,6 @@ h1[tabindex="-1"]:focus {
   border-top: 1px solid var(--line);
 }
 
-.ledger-totals .result-cell {
-  text-align: right;
-}
-
 .method-disclosure {
   margin-top: 28px;
 }
@@ -3045,11 +2933,6 @@ h1[tabindex="-1"]:focus {
     font-size: 16px;
   }
 
-  .salary-row .picker-trigger {
-    padding-inline: 3px;
-    gap: 4px;
-  }
-
   .capture-privacy {
     max-width: 24ch;
   }
@@ -3094,10 +2977,6 @@ h1[tabindex="-1"]:focus {
 
   .comparison-metric .offer-comparison dd > strong {
     font-size: 25px;
-  }
-
-  .header-context {
-    display: none;
   }
 }
 
@@ -3182,16 +3061,6 @@ h1[tabindex="-1"]:focus {
   .calculation-disclosure .calculation-sheet {
     border-top: 0;
     border-bottom: 0;
-  }
-
-  .resico-eligibility-disclosure > summary {
-    margin-top: 8px;
-    border-top: 1px solid var(--line);
-  }
-
-  .header-context {
-    padding-left: 14px;
-    font-size: 12px;
   }
 
   .capture-layout,
@@ -3355,6 +3224,8 @@ h1[tabindex="-1"]:focus {
   }
 
   .result-cell {
+    justify-items: stretch;
+    text-align: left;
     grid-template-columns: auto minmax(0, 1fr);
     align-items: baseline;
     column-gap: 6px;
@@ -3507,7 +3378,7 @@ h1[tabindex="-1"]:focus {
   }
 
   .salary-row .input-shell,
-  .salary-row .picker-trigger {
+  .salary-row .select-control select {
     height: 58px;
   }
 
@@ -3638,13 +3509,6 @@ h1[tabindex="-1"]:focus {
 }
 
 @media (max-width: 470px) {
-  .header-context {
-    overflow: hidden;
-    max-width: 150px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
   .step-rail button {
     justify-content: center;
   }
@@ -3770,9 +3634,5 @@ h1[tabindex="-1"]:focus {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-  }
-
-  .picker-menu {
-    animation: none !important;
   }
 }

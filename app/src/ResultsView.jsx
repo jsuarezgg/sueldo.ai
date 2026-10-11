@@ -1,4 +1,4 @@
-import { Check, X } from "@phosphor-icons/react";
+import { Check, PencilSimple, X } from "@phosphor-icons/react";
 import {
   EMPLOYMENT_SUBSIDY_2026,
   MXN,
@@ -83,11 +83,8 @@ const LEDGER_ROWS = [
   { label: "Venta y conversión de RSUs", value: (c) => -c.equityFees },
 ];
 
-const LEDGER_TOTALS = [
-  { className: "recurring-total", label: "Mes regular neto", value: (c) => c.recurringMonthlyCash },
-  { className: "cash-total", label: "Promedio mensual neto", value: (c) => c.averageMonthlyCash },
-  { className: "economic-total", label: "Valor económico del periodo", value: (c) => c.economicValue },
-];
+// The headline cards already show the average month and period value.
+const REGULAR_MONTH = { className: "recurring-total", label: "Mes regular neto", value: (c) => c.recurringMonthlyCash };
 
 function ResultCell({ amount, positive = false, detail, label, accessibleLabel }) {
   return (
@@ -139,7 +136,7 @@ function ComparisonTable({ offers, calculations }) {
         {OFFER_KEYS.map((key) => (
           <div key={key}>
             <strong>{offers[key].name}</strong>
-            <small>{offers[key].relationship} · {offers[key].location}</small>
+            <small>{[offers[key].relationship, offers[key].location].filter(Boolean).join(" · ")}</small>
           </div>
         ))}
       </div>
@@ -154,9 +151,7 @@ function ComparisonTable({ offers, calculations }) {
       </div>
 
       <div className="ledger-totals">
-        {LEDGER_TOTALS.map((row) => (
-          <LedgerRow key={row.label} {...row} offers={offers} calculations={calculations} />
-        ))}
+        <LedgerRow {...REGULAR_MONTH} offers={offers} calculations={calculations} />
       </div>
       <Disclosure
         className="ledger-detail-disclosure"
@@ -296,12 +291,13 @@ export function ResultsView({ offers, assumptions, horizon, setHorizon, onEditOf
 
   return (
     <div className="app-shell results-shell">
-      <BrandHeader onHome={onEditOffers}>Estado de compensación</BrandHeader>
+      <BrandHeader onHome={onEditOffers} />
       <main className="results-main">
         <section className="results-heading">
           <div className="results-title">
             <h1 tabIndex={-1}>Tus ofertas, en la misma cuenta.</h1>
             <button className="edit-offers" onClick={onEditOffers}>
+              <PencilSimple size={16} aria-hidden="true" />
               Editar ofertas
             </button>
           </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, Check, WarningCircle } from "@phosphor-icons/react";
-import { TAX_YEAR, calculateComparison, describeDifference } from "./compensation.js";
+import { TAX_YEAR, calculateComparison, describeDifference, isPayrollOffer } from "./compensation.js";
 import {
   OFFER_KEYS,
   OFFER_LABELS,
@@ -11,10 +11,12 @@ import {
 } from "./capture-state.js";
 import { OfferAssumptionsEditor } from "./AssumptionsEditor.jsx";
 import { OfferCompensationEditor } from "./CompensationEditor.jsx";
-import { BrandHeader, MoneyInput, PickerField, TextInput } from "./fields.jsx";
+import { BrandHeader, MoneyInput, SelectField, TextInput } from "./fields.jsx";
 import {
+  CURRENCY_OPTIONS,
   PLAIN_AMOUNT,
   describeInvalidReason,
+  describeResico,
   formatSourceDate,
   summarizeInvalidCalculation,
 } from "./format.js";
@@ -40,14 +42,14 @@ const STEPS = [
   },
 ];
 
-const CURRENCY_OPTIONS = [
-  { value: "MXN", label: "MXN" },
-  { value: "USD", label: "USD" },
-];
-
 const RELATIONSHIP_OPTIONS = [
   { value: "Nómina", label: "Nómina" },
   { value: "Contratista independiente", label: "Contractor" },
+];
+
+const RESICO_OPTIONS = [
+  { value: "eligible", label: "Sí cumplo" },
+  { value: "ineligible", label: "No cumplo / no sé" },
 ];
 
 const FX_STATUS_SHORT = {
@@ -73,7 +75,40 @@ function describeCurrencyChange(notice) {
   return `Convertimos ${from} a ${to} con el tipo de cambio actual (${notice.fxRate.toFixed(4)}).`;
 }
 
-function OfferBaseEditor({ offer, onChange, onCurrencyChange, monthlyPayError, currencyNotice }) {
+// RESICO is the only contractor regime we estimate, so eligibility is asked as soon as it applies.
+function ResicoChoice({ offer, taxProfile, onChange }) {
+  const blocked = taxProfile.reason === "income-limit" || taxProfile.reason === "profile-ineligible";
+  return (
+    <fieldset className="relationship-choice resico-choice">
+      <legend>¿Cumples los requisitos de RESICO?</legend>
+      {RESICO_OPTIONS.map((option) => (
+        <label key={option.value}>
+          <input
+            type="radio"
+            name={`resico-${offer.id}`}
+            value={option.value}
+            checked={offer.resicoEligibilityStatus === option.value}
+            onChange={() => onChange({ resicoEligibilityStatus: option.value })}
+          />
+          <span>{option.label}</span>
+        </label>
+      ))}
+      <p className="field-hint">
+        No aplica a socios o accionistas, partes relacionadas, establecimiento permanente en
+        México, REFIPRE ni ciertos ingresos asimilados.{" "}
+        <a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LISR.pdf" target="_blank" rel="noreferrer">LISR 113-E</a>
+      </p>
+      {blocked ? (
+        <p className="currency-change-note warning" role="status">
+          <WarningCircle size={16} weight="fill" aria-hidden="true" />
+          <span>{describeResico(taxProfile)}. Esta calculadora solo estima contractors en RESICO.</span>
+        </p>
+      ) : null}
+    </fieldset>
+  );
+}
+
+function OfferBaseEditor({ offer, taxProfile, onChange, onCurrencyChange, monthlyPayError, currencyNotice }) {
   return (
     <section className="offer-editor" data-offer={offer.id} aria-label={OFFER_LABELS[offer.id]}>
       <div className="offer-editor-heading">
@@ -93,7 +128,7 @@ function OfferBaseEditor({ offer, onChange, onCurrencyChange, monthlyPayError, c
           error={monthlyPayError}
           selectOnFocus
         />
-        <PickerField
+        <SelectField
           label="Moneda"
           className="compact-field"
           value={offer.currency}
@@ -124,6 +159,7 @@ function OfferBaseEditor({ offer, onChange, onCurrencyChange, monthlyPayError, c
           </label>
         ))}
       </fieldset>
+      {isPayrollOffer(offer) ? null : <ResicoChoice offer={offer} taxProfile={taxProfile} onChange={onChange} />}
     </section>
   );
 }
@@ -231,6 +267,7 @@ export function CaptureView({
   const calculations = calculateComparison(offers, assumptions, "year");
   const validationMessages = calculations.valid ? [] : pendingMessages(calculations);
   const stepContent = STEPS[step];
+  const resicoPending = OFFER_KEYS.some((key) => calculations[key].taxProfile.reason?.startsWith("profile-"));
 
   function updateOffer(key, patch) {
     setOffers((current) => patchOfferState(current, key, patch));
@@ -286,6 +323,7 @@ export function CaptureView({
                 <OfferBaseEditor
                   key={key}
                   offer={offers[key]}
+                  taxProfile={calculations[key].taxProfile}
                   onChange={(patch) => updateOffer(key, patch)}
                   onCurrencyChange={(currency) => updateCurrency(key, currency)}
                   monthlyPayError={baseIssues.find((issue) => issue.offerKey === key && issue.field === "monthlyPay")?.message}
@@ -362,7 +400,7 @@ export function CaptureView({
           offers={offers}
           assumptions={assumptions}
           calculations={calculations}
-          onReviewAssumptions={() => navigateToStep(baseIssues.length ? 0 : 2)}
+          onReviewAssumptions={() => navigateToStep(baseIssues.length || resicoPending ? 0 : 2)}
         />
       </main>
     </div>
